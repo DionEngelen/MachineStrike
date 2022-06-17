@@ -1,0 +1,18 @@
+.navigation {
+    display: grid;
+    grid-template: 1fr / repeat(3, 1fr);
+    justify-items: center;
+    align-items: center;
+    font-size: 1.3rem;
+    background-color: darkblue;
+    padding-top: 0.3rem;
+    padding-bottom: 0.5rem;
+}
+
+.navigation a {
+    color: white;
+}
+
+.navigation a:hover {
+    color: lightgreen;
+}

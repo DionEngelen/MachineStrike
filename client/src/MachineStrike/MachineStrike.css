@@ -1,0 +1,5 @@
+.game {
+    display: grid;
+    grid-template: 1fr / 15% 1fr 15%;
+    justify-items: center;
+}
