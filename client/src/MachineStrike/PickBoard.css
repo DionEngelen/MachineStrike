@@ -1,0 +1,89 @@
+.pick-board {
+    display: grid;
+    grid-template: 1fr / 17.6% 50% 1fr;
+    background-image: linear-gradient(to right, darkblue, skyblue 17.6%, skyblue 82.6%, darkblue);
+}
+
+.select-board div {
+    align-items: center;
+    height: 204px;
+}
+
+.raintrace:hover {
+    background-image: radial-gradient(forestgreen 15%, skyblue 70%);
+}
+
+.bulwark:hover {
+    background-image: radial-gradient(snow 15%, skyblue 70%);
+}
+.cinnabar-sands:hover {
+    background-image: radial-gradient(sandybrown 15%, skyblue 70%);
+}
+
+.pick-board button {
+    background-color: skyblue;
+    border: 3px solid black;
+    border-radius: 50% ;
+    margin-top: 8.5%;
+    width: 7rem;
+    height: 4.5rem;
+    font-size: large;
+}
+
+.raintrace button {
+    background-color: rgb(40, 197, 40);
+}
+
+.raintrace button:hover {
+    transform: scale(1.1);
+}
+
+.bulwark button {
+    background-color: rgb(216, 208, 208);
+}
+
+.bulwark button:hover {
+    transform: scale(1.1);
+}
+
+.cinnabar-sands button {
+    background-color: rgb(199, 116, 44);
+}
+
+.cinnabar-sands button:hover {
+    transform: scale(1.1);
+}
+
+.show-board, .leftside {
+    place-self: center;
+}
+
+.show-board{
+    place-self: center;
+    display: flex;
+    flex-wrap: wrap;
+    width: 400px;
+    height: 400px;
+}
+.show-board > div {
+    width: 50px;
+    height: 50px;
+    border: 1px solid black;
+    box-sizing: border-box;
+}
+
+.hill {
+    background-color: grey;
+}
+
+.mountain {
+    background-color: darkslategrey;
+}
+
+.grassland {
+    background-color: forestgreen;
+}
+
+.marsh {
+    background-color: turquoise;
+}

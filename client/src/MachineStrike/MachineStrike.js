@@ -1,12 +1,22 @@
 import React from "react";
+import { useState } from "react";
+import { PickBoard } from "./PickBoard";
+import { PickPieces } from "./PickPieces";
 import "./MachineStrike.css";
 
 export function MachineStrike() {
-    return (
-        <div className="game">
-            <p>infoboard player 1</p>
-            <p>Here you can play machine strike.</p>
-            <p>infoboard player 2</p>
-        </div>
-    )
+    const [chosenBoard, setChosenBoard] = useState(null);
+    const [chosenMachines, setChosenMachines] = useState(null);
+    if (!chosenBoard) {
+        console.log("hello2")
+        return (
+            <PickBoard chooseBoard={setChosenBoard}/>
+        )
+    }
+    if (!chosenMachines) {
+        console.log("hello")
+        return (
+            <PickPieces chooseMachines={setChosenMachines}/>
+        )
+    }
 }

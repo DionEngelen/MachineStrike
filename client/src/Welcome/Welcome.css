@@ -1,6 +1,28 @@
 .welcome-content {
     display: grid;
-    grid-template: 1fr / 15% 1fr 15%;
+    grid-template: 1fr / 22% 1fr 22%;
     background-color: skyblue;
     color: black;
+}
+
+.welcome-text {
+    /* font-size: large; */
+    padding: 10% 15%;
+}
+
+.sideimage {
+    width: 96%;
+    height: 50%;
+}
+
+div .left {
+    background-image: linear-gradient(to right,darkblue, skyblue 80%);
+}
+
+div .right {
+    background-image: linear-gradient(to left, darkblue, skyblue 80%);
+}
+
+.side {
+    padding-top: 33%;
 }

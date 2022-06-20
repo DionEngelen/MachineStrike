@@ -1,34 +1,58 @@
 import React from "react";
+import { useState, useEffect } from "react";
 import "./Welcome.css";
-import bellowback from "../images/Bellowback.png";
-import clawstrider from "../images/Clawstrider.png";
-import fanghorn from "../images/Fanghorn.png";
-import fireclaw from "../images/Fireclaw.png";
-import ravager from "../images/Ravager.png";
-import redeyeWatcher from "../images/RedeyeWatcher.png";
-import slitherfang from "../images/Slitherfang.png";
-import sunwing from "../images/Sunwing.png";
+import bellowback from "../images/WelcomeImages/Bellowback.png";
+import clawstrider from "../images/WelcomeImages/Clawstrider.png";
+import clamberjaw from "../images/WelcomeImages/Clamberjaw.png"
+import fireclaw from "../images/WelcomeImages/Fireclaw.png";
+import ravager from "../images/WelcomeImages/Ravager.png";
+import redeyeWatcher from "../images/WelcomeImages/RedeyeWatcher.png";
+import slitherfang from "../images/WelcomeImages/Slitherfang.png";
+import sunwing from "../images/WelcomeImages/Sunwing.png";
 
-const leftsideImages = [clawstrider, fanghorn, slitherfang, ravager];
-const rightsideImages = [sunwing, redeyeWatcher, fireclaw, bellowback];
+
 
 export function Welcome() {
+    const leftsideImages = [sunwing, redeyeWatcher, fireclaw, ravager];
+    const rightsideImages = [clawstrider, clamberjaw, slitherfang, bellowback];
+
+    const [currentLeftsideImage, setCurrentLeftsideImage] = useState(leftsideImages[0]);
+    const [currentRightsideImage, setCurrentRightsideImage] = useState(rightsideImages[0]);
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            const indexLeft = leftsideImages.indexOf(currentLeftsideImage);
+            const nextLeftCurrentImageIndex = (indexLeft + 1) % leftsideImages.length;
+            const indexRight = rightsideImages.indexOf(currentRightsideImage);
+            const nextRightCurrentImageIndex = (indexRight + 1) % rightsideImages.length;
+
+            setCurrentLeftsideImage(leftsideImages[nextLeftCurrentImageIndex]);
+            setCurrentRightsideImage(rightsideImages[nextRightCurrentImageIndex]);
+        }, 2500)
+        return ()=> clearInterval(timer)
+    })
+
    return ( 
     <div className="welcome-content">
-        <div>
-            <p>Left side bar</p>
+        <div className="side left">
+            <img alt="machine-images" className="sideimage left" src={currentLeftsideImage}/>
         </div>
-        <div>
-            <p>Welcome to Machine Strike!</p> 
+        <div className="welcome-text">
+            <h1>Welcome to Machine Strike!</h1> 
             <br/>
-            <p>One</p>
+            <h2>The boardgame to make your machines fight for you!</h2>
             <br/>
-            <p>Two</p>
+            <h3>Machine strike is all about tactics. Position your machines strategically, use the landscape
+                to your benefit and surprise your enemy when it is weakened.
+            </h3>
+            <h3>This turn-based game is played with two players who each have to elimate as many machines as
+                possible to reach victory. Build your army to show who's best.
+            </h3>
             <br/>
-            <p>Three</p>
+            <button className="playbutton">Start playing</button>
         </div>
-        <div>
-            <p>Right side bar</p>
+        <div className="side right">
+            <img alt="machine-images" className="sideimage right" src={currentRightsideImage}/>
         </div>
     </div>
    )
