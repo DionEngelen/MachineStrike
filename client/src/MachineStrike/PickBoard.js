@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./PickBoard.css";
 
 export function PickBoard({chooseBoard}) {
@@ -45,8 +45,32 @@ export function PickBoard({chooseBoard}) {
         "hill", "hill", "grassland", "grassland", "mountain", "grassland",
         "hill", "marsh", "grassland", "mountain"]
     }
-
+    const [boards, setBoards] = useState([])
     const [board, setBoard] = useState(null);
+
+    async function fetchBoard() {
+        try {
+            const response = await fetch("http://localhost:5000/boards", {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            if (response.ok) {
+                const playBoards = await response.json();
+                console.log(playBoards);
+                setBoards(playBoards);
+                console.log(boards);
+            }
+        } catch (error) {
+            console.log(error.toString());
+        }
+    }
+
+    useEffect (() => {
+        //fetchBoard();
+    },[]);
 
     return(
         <div className="pick-board">
@@ -56,7 +80,7 @@ export function PickBoard({chooseBoard}) {
                 <h2>Choose a board you like</h2>
                 <div className="raintrace">
                     <button
-                    onMouseEnter={() => setBoard(raintrace)}
+                    onMouseEnter={() => {setBoard(raintrace)}}
                     onMouseLeave={() => setBoard(null)}
                     onClick={() => chooseBoard(board)}>The Raintrace</button>
                 </div>

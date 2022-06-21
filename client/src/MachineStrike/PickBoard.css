@@ -73,17 +73,25 @@
 }
 
 .hill {
-    background-color: grey;
-}
-
-.mountain {
     background-color: darkslategrey;
 }
 
+.mountain {
+    background-color: grey;
+}
+
 .grassland {
-    background-color: forestgreen;
+    background-color: rgb(58, 220, 58);
 }
 
 .marsh {
     background-color: turquoise;
+}
+
+.forest {
+    background-color: forestgreen;
+}
+
+.chasm {
+    background-color: rgb(226, 33, 33);
 }

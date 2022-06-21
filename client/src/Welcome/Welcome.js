@@ -29,7 +29,7 @@ export function Welcome() {
             setCurrentLeftsideImage(leftsideImages[nextLeftCurrentImageIndex]);
             setCurrentRightsideImage(rightsideImages[nextRightCurrentImageIndex]);
         }, 2500)
-        return ()=> clearInterval(timer)
+        return ()=> clearInterval(timer);
     })
 
    return ( 

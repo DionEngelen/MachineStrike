@@ -1,0 +1,66 @@
+.game {
+    display: grid;
+    grid-template-columns: 20% 1fr 20%;
+    place-items: center;
+}
+
+.gameboard{
+    margin-top: 5%;
+    place-self: center;
+    display: flex;
+    flex-wrap: wrap;
+    width: 560px;
+    height: 560px;
+}
+.gameboard > div {
+    width: 70px;
+    height: 70px;
+    border: 1px solid black;
+    box-sizing: border-box;
+}
+
+.hill {
+    background-color: darkslategrey;
+}
+
+.mountain {
+    background-color: grey;
+}
+
+.grassland {
+    background-color: rgb(58, 220, 58);
+}
+
+.marsh {
+    background-color: turquoise;
+}
+
+.forest {
+    background-color: forestgreen;
+}
+
+.chasm {
+    background-color: rgb(226, 33, 33);
+}
+
+.p1-info {
+    display: grid;
+    grid-template-rows: 10% 30% 1fr;
+}
+
+.p1-machinepieces {
+    margin-top: 100px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    row-gap: 10px;
+    place-items: center;
+}
+
+.machine-piece {
+    font-size: small;
+    width: 60px;
+    height: 60px;
+    background-color: rgb(188, 108, 222);
+    border: 1px solid black;
+    border-radius: 5%;
+}
