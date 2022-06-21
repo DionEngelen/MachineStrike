@@ -1,12 +1,17 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
 import mysql.connector
+from mysteries import mysteries
 
 app = Flask(__name__)
 CORS(app)
 
-mydb = mysql.connector.connect(host = "localhost", user = "Dion",
-    passwd = "machine97", database = "machine_strike", auth_plugin = "mysql_native_password")
+db_username = mysteries.get('DATABASE_USER')
+db_password = mysteries.get('DATABASE_PASSWORD')
+db_name = mysteries.get('DATABASE_NAME')
+
+mydb = mysql.connector.connect(host = "localhost", user = db_username,
+    passwd = db_password, database = db_name, auth_plugin = "mysql_native_password")
 my_cursor = mydb.cursor()
 
 @app.route("/", methods = ["POST", "GET"])
