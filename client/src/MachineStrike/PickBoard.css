@@ -28,6 +28,7 @@
     width: 7rem;
     height: 4.5rem;
     font-size: large;
+    transition: 0.2s;
 }
 
 .raintrace button {
@@ -36,6 +37,7 @@
 
 .raintrace button:hover {
     transform: scale(1.1);
+    transition-timing-function: ease-out;
 }
 
 .bulwark button {
@@ -44,10 +46,12 @@
 
 .bulwark button:hover {
     transform: scale(1.1);
+    transition-timing-function: ease-out;
 }
 
 .cinnabar-sands button {
     background-color: rgb(199, 116, 44);
+    transition-timing-function: ease-out;
 }
 
 .cinnabar-sands button:hover {

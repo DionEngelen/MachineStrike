@@ -1,5 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Welcome.css";
 import bellowback from "../images/WelcomeImages/Bellowback.png";
 import clawstrider from "../images/WelcomeImages/Clawstrider.png";
@@ -15,9 +16,10 @@ import sunwing from "../images/WelcomeImages/Sunwing.png";
 export function Welcome() {
     const leftsideImages = [sunwing, redeyeWatcher, fireclaw, ravager];
     const rightsideImages = [clawstrider, clamberjaw, slitherfang, bellowback];
+    const navigate = useNavigate();
 
     const [currentLeftsideImage, setCurrentLeftsideImage] = useState(leftsideImages[0]);
-    const [currentRightsideImage, setCurrentRightsideImage] = useState(rightsideImages[0]);
+    const [currentRightsideImage, setCurrentRightsideImage] = useState(rightsideImages[0]); 
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -49,7 +51,9 @@ export function Welcome() {
                 possible to reach victory. Build your army to show who's best.
             </h3>
             <br/>
-            <button className="playbutton">Start playing</button>
+            <button
+            className="playbutton"
+            onClick={() => navigate("/machinestrike")}>Start playing</button>
         </div>
         <div className="side right">
             <img alt="machine-images" className="sideimage right" src={currentRightsideImage}/>
