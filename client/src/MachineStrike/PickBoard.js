@@ -12,7 +12,7 @@ export function PickBoard({chooseBoard}) {
     {name: "cinnabarSands", source: cinnabarSands}];
 
     const [leftSideImage, setLeftSideImage] = useState(null);
-    const [boards, setBoards] = useState(null)
+    const [fetchedBoards, setFetchedBoards] = useState(null)
     const [board, setBoard] = useState(null);
 
     async function fetchBoard() {
@@ -26,7 +26,7 @@ export function PickBoard({chooseBoard}) {
             })
             if (response.ok) {
                 const playBoards = await response.json();
-                setBoards(playBoards);        
+                setFetchedBoards(playBoards);        
             }
         } catch (error) {
             console.log(error.toString());
@@ -64,9 +64,9 @@ export function PickBoard({chooseBoard}) {
                     onMouseEnter={() => setLeftSideImage(image.source)}
                     onMouseLeave={() => setLeftSideImage(null)}>
                         <button
-                        onMouseEnter={() => {setBoard(boards[index])}}
+                        onMouseEnter={() => {setBoard(fetchedBoards[index])}}
                         onMouseLeave={() => setBoard(null)}
-                        onClick={() => chooseBoard(board)}>{boards ? boards[index].name : ""}</button>
+                        onClick={() => chooseBoard(board)}>{fetchedBoards ? fetchedBoards[index].name : ""}</button>
                     </div>
                 ))}
             </div>

@@ -104,17 +104,20 @@ export function PickPieces({chooseMachines, player}) {
             <div className="show-list">
                 <h2>{player} choose your pieces</h2>
                 <h3>Selected pieces:</h3>
-                <p className="question">Not satisfied?</p>
-                <p>Click to remove a piece</p>
+                <p>Total points: {victoryPoints > 0 ? victoryPoints : "0"}/10</p>
                 {machineList.length > 0 && machineList.map((machine) => (
                     <button
                     className="unit-of-machinesquad"
+                    onMouseEnter={() => setMachine(machine)}
+                    onMouseLeave={() => setMachine(null)}
                     onClick={() => removeMachine(machine)}>{machine.name}</button>
                 ))}
                 <button
                 className="confirm-button"
                 disabled={victoryPoints < 10}
                 onClick={() => confirmChoice(machineList)}>Confirm choice</button>
+                <p className="question">Not satisfied?</p>
+                <p>Click to remove a piece</p>
             </div>
             <div className="machine-pieces">
             {types.map((type, index) => (

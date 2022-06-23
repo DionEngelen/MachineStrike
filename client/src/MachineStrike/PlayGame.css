@@ -38,7 +38,7 @@
     background-color: rgb(226, 33, 33);
 }
 
-.p1-info, p2-info {
+.p1-info, .p2-info {
     display: grid;
     grid-template-rows: 10% 30% 1fr;
 }
@@ -50,7 +50,7 @@
     margin-left: -100px;
 }
 
-.p1-machinepieces, p2-machinepieces {
+.p1-machinepieces, .p2-machinepieces {
     margin-top: 100px;
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -59,10 +59,16 @@
 }
 
 .machine-piece {
-    font-size: small;
+    font-size: x-small;
     width: 60px;
     height: 60px;
-    background-color: rgb(188, 108, 222);
     border: 1px solid black;
     border-radius: 5%;
+}
+
+.player1machine{
+    background-color: rgb(188, 108, 222);
+}
+.player2machine{
+    background-color: rgb(220, 149, 17);
 }

@@ -9,7 +9,9 @@ export function PlayGame({board, machinesp1, machinesp2}) {
                 <p>Show pieces on hover</p>
                 <div className="p1-machinepieces">
                 {machinesp1.map((machine) => (
-                    <div className="machine-piece">{machine.name}</div>
+                    <div className="player1machine machine-piece">
+                        {machine.name}<br/><br/><br/>Atk:{machine.attack} Hp:{machine.health}
+                    </div>
                 ))}
                 </div>
             </div>
@@ -25,7 +27,9 @@ export function PlayGame({board, machinesp1, machinesp2}) {
                 <p>Show pieces on hover</p>
                 <div className="p2-machinepieces">
                 {machinesp2.map((machine) => (
-                    <div className="machine-piece">{machine.name}</div>
+                    <div className="player2machine machine-piece">
+                        {machine.name}<br/><br/><br/>Atk:{machine.attack} Hp:{machine.health}
+                    </div>
                 ))}
                 </div>
             </div>
