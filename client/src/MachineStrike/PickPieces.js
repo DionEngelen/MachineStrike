@@ -1,5 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import { hiddenMachinesKey } from "./hiddenkeys";
 import "./PickPieces.css";
 import burrower from "../images/GameImages/Burrower.png";
 import grazer from "../images/GameImages/Grazer.png";
@@ -26,7 +27,7 @@ import fireclaw from "../images/GameImages/Fireclaw.png";
 import scorcher from "../images/GameImages/Scorcher.png";
 import slitherfang from "../images/GameImages/Slitherfang.png";
 
-export function PickPieces({chooseMachines}) {
+export function PickPieces({chooseMachines, player}) {
     const types = ["Melee", "Gunner", "Ram", "Dash", "Swoop", "Pull"];
     const machineImages = [burrower, grazer, lancehorn, charger, plowhorn, longleg,
     bristleback, scrapper, skydrifter, bellowback, widemaw, snapmaw,
@@ -40,7 +41,7 @@ export function PickPieces({chooseMachines}) {
 
     async function fetchMachines() {
         try {
-            const response = await fetch("http://localhost:5000/machines", {
+            const response = await fetch(hiddenMachinesKey(), {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
@@ -88,6 +89,12 @@ export function PickPieces({chooseMachines}) {
         setMachineList(machineList);
     }
 
+    const confirmChoice = (myMachines) => {
+        chooseMachines(myMachines);
+        setMachineList([]);
+        setVictoryPoints(0);
+    }
+
     useEffect (() => {
         fetchMachines();
     },[]);
@@ -95,6 +102,7 @@ export function PickPieces({chooseMachines}) {
     return (
         <div className="pick-pieces">
             <div className="show-list">
+                <h2>{player} choose your pieces</h2>
                 <h3>Selected pieces:</h3>
                 <p className="question">Not satisfied?</p>
                 <p>Click to remove a piece</p>
@@ -106,38 +114,36 @@ export function PickPieces({chooseMachines}) {
                 <button
                 className="confirm-button"
                 disabled={victoryPoints < 10}
-                onClick={() => chooseMachines(machineList)}>Confirm choice</button>
+                onClick={() => confirmChoice(machineList)}>Confirm choice</button>
             </div>
             <div className="machine-pieces">
-                {types.map((type, index) => {
-                    return (
-                    <div
-                    className={type}
-                    key={index}>
-                        <h3>{type}</h3>
-                        {fetchedMachines.filter((machine) => (
-                            machine.type === type
-                        )).map((filteredMachine, index) => {
-                            return (
-                            <button
-                            key={index}
-                            onMouseEnter={() => setMachine(filteredMachine)}
-                            onMouseLeave={() => setMachine(null)}
-                            onClick={() => addMachine(filteredMachine)}>{filteredMachine.name}</button>
-                        )})}
-                    </div>
-                    )})}
+            {types.map((type, index) => (
+                <div
+                className={type}
+                key={index}>
+                    <h3>{type}</h3>
+                    {fetchedMachines.filter((machine) => (
+                        machine.type === type
+                    )).map((filteredMachine, index) => (
+                        <button
+                        key={index}
+                        onMouseEnter={() => setMachine(filteredMachine)}
+                        onMouseLeave={() => setMachine(null)}
+                        onClick={() => addMachine(filteredMachine)}>{filteredMachine.name}</button>
+                    ))}
+                </div>
+            ))}
             </div>
             <div className="show-pieces">
                 {machine && <div className={machine.name}>
                     <div className="name-and-points">
-                        <p>{machine.name}</p>
+                        <h3>{machine.name.charAt(0).toUpperCase() + machine.name.slice(1)}</h3>
                         <p>Points: {machine.points}</p>
                     </div>
                     <div>
                         <img
                         className="shown-machine"
-                        src={burrower}
+                        src={machineImages[machine.machine - 1]}
                         alt={machine.name}/>
                     </div>
                     <div className="stats">
@@ -147,7 +153,7 @@ export function PickPieces({chooseMachines}) {
                         <p className="moverange">Move range: {machine.movement_range}</p>
                         <p className="armor">Armored spots: {machine.armor[0]} {machine.armor[1] &&
                         machine.armor[1]} {machine.armor[2] && machine.armor[2]}</p>
-                        <p className="weak-spots">Weak spots: {machine.weak_spots[0]} {machine.weak_spots[1] &&
+                        <p className="weak-spots">Weak spots:<br/>{machine.weak_spots[0]} {machine.weak_spots[1] &&
                         machine.weak_spots[1]} {machine.weak_spots[2] && machine.weak_spots[2]}</p>
                         <p className="ability">Ability: {machine.ability}</p>
                     </div>

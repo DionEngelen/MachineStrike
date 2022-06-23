@@ -7,16 +7,16 @@
 .select-board div {
     align-items: center;
     height: 204px;
+    border-radius: 50%;
 }
 
 .raintrace:hover {
     background-image: radial-gradient(forestgreen 15%, skyblue 70%);
 }
-
 .bulwark:hover {
     background-image: radial-gradient(snow 15%, skyblue 70%);
 }
-.cinnabar-sands:hover {
+.cinnabarSands:hover {
     background-image: radial-gradient(sandybrown 15%, skyblue 70%);
 }
 
@@ -34,34 +34,28 @@
 .raintrace button {
     background-color: rgb(40, 197, 40);
 }
-
 .raintrace button:hover {
     transform: scale(1.1);
     transition-timing-function: ease-out;
 }
-
 .bulwark button {
     background-color: rgb(216, 208, 208);
 }
-
 .bulwark button:hover {
     transform: scale(1.1);
     transition-timing-function: ease-out;
 }
-
-.cinnabar-sands button {
+.cinnabarSands button {
     background-color: rgb(199, 116, 44);
     transition-timing-function: ease-out;
 }
-
-.cinnabar-sands button:hover {
+.cinnabarSands button:hover {
     transform: scale(1.1);
 }
 
 .show-board, .leftside {
     place-self: center;
 }
-
 .show-board{
     place-self: center;
     display: flex;
@@ -79,23 +73,36 @@
 .hill {
     background-color: darkslategrey;
 }
-
 .mountain {
     background-color: grey;
 }
-
 .grassland {
     background-color: rgb(58, 220, 58);
 }
-
 .marsh {
     background-color: turquoise;
 }
-
 .forest {
     background-color: forestgreen;
 }
-
 .chasm {
     background-color: rgb(226, 33, 33);
+}
+
+.leftside {
+    display: flex;
+    z-index: 1;
+}
+
+.leftside img {
+    width: 350px;
+    height: 350px;
+    margin-left: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.leftside p {
+    margin-left: 120px;
+    font-weight: bold;
 }

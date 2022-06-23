@@ -1,14 +1,23 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import { hiddenBoardsKey } from "./hiddenkeys.js";
 import "./PickBoard.css";
+import raintrace from "../images/PickBoardImages/TheRaintrace.png";
+import bulwark from "../images/PickBoardImages/TheBulwark.png";
+import cinnabarSands from "../images/PickBoardImages/CinnabarSands.png";
 
 export function PickBoard({chooseBoard}) {
-    const [boards, setBoards] = useState([])
+    const leftSideImages = [{name: "raintrace", source: raintrace},
+    {name: "bulwark", source: bulwark},
+    {name: "cinnabarSands", source: cinnabarSands}];
+
+    const [leftSideImage, setLeftSideImage] = useState(null);
+    const [boards, setBoards] = useState(null)
     const [board, setBoard] = useState(null);
 
     async function fetchBoard() {
         try {
-            const response = await fetch("http://localhost:5000/boards", {
+            const response = await fetch(hiddenBoardsKey(), {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
@@ -17,9 +26,7 @@ export function PickBoard({chooseBoard}) {
             })
             if (response.ok) {
                 const playBoards = await response.json();
-                console.log(playBoards);
-                setBoards(playBoards);
-                console.log(boards);
+                setBoards(playBoards);        
             }
         } catch (error) {
             console.log(error.toString());
@@ -33,27 +40,35 @@ export function PickBoard({chooseBoard}) {
     return(
         <div className="pick-board">
             <div className="leftside">
+                {leftSideImage && <div>
+                    {leftSideImage === raintrace &&
+                    <p>The Raintrace, a vast forest known<br/>to be overgrown
+                    by hundreds of exotic<br/>species both fauna and flora.<br/>
+                    One could get easily lost.</p>}
+                    {leftSideImage === bulwark &&
+                    <p>The Bulwark consists of dangerous, glacial<br/> territories
+                    inhabited by machines<br/>resistant to the frigid cold.<br/>
+                    Most who enter do not survive.</p>}
+                    {leftSideImage === cinnabarSands &&
+                    <p>The arid climate of the Cinnabar Sands<br/>caused the clans to
+                    scatter creating rivalry<br/> among them. Anyone wandering<br/>
+                    them alone will not be spared.</p>}
+                    <img src={leftSideImage} alt={leftSideImage}/>
+                </div>}
             </div>
             <div className="select-board">
                 <h2>Choose a board you like</h2>
-                <div className="raintrace">
-                    <button
-                    onMouseEnter={() => {setBoard(boards[0])}}
-                    onMouseLeave={() => setBoard(null)}
-                    onClick={() => chooseBoard(board)}>The Raintrace</button>
-                </div>
-                <div className="bulwark">
-                    <button
-                    onMouseEnter={() => setBoard(boards[1])}
-                    onMouseLeave={() => setBoard(null)}
-                    onClick={() => chooseBoard(board)}>The Bulwark</button>
-                </div>
-                <div className="cinnabar-sands">
-                    <button
-                    onMouseEnter={() => setBoard(boards[2])}
-                    onMouseLeave={() => setBoard(null)}
-                    onClick={() => chooseBoard(board)}>Cinnabar Sands</button>
-                </div>
+                {leftSideImages.map((image, index)=> (
+                    <div
+                    className={image.name}
+                    onMouseEnter={() => setLeftSideImage(image.source)}
+                    onMouseLeave={() => setLeftSideImage(null)}>
+                        <button
+                        onMouseEnter={() => {setBoard(boards[index])}}
+                        onMouseLeave={() => setBoard(null)}
+                        onClick={() => chooseBoard(board)}>{boards ? boards[index].name : ""}</button>
+                    </div>
+                ))}
             </div>
             <div className="show-board">
                 {board && board.tiles.map((tile, index) => (

@@ -10,7 +10,8 @@ export function MachineStrike() {
     const [chosenPlayer1, setChosenPlayer1] = useState(null);
     const [chosenPlayer2, setChosenPlayer2] = useState(null);
     const [chosenBoard, setChosenBoard] = useState(null);
-    const [chosenMachines, setChosenMachines] = useState(null);
+    const [chosenMachinesp1, setChosenMachinesp1] = useState(null);
+    const [chosenMachinesp2, setChosenMachinesp2] =useState(null);
     if (!chosenPlayer1 && !chosenPlayer2) {
         return (
             <MakePlayers makeplayer1={setChosenPlayer1} makeplayer2={setChosenPlayer2}/>
@@ -21,14 +22,19 @@ export function MachineStrike() {
             <PickBoard chooseBoard={setChosenBoard}/>
         )
     }
-    if (!chosenMachines) {
+    if (!chosenMachinesp1) {
         return (
-            <PickPieces chooseMachines={setChosenMachines}/>
+            <PickPieces chooseMachines={setChosenMachinesp1} player={chosenPlayer1}/>
+        )
+    }
+    if (!chosenMachinesp2) {
+        return (
+            <PickPieces chooseMachines={setChosenMachinesp2} player={chosenPlayer2}/>
         )
     }
     else {
         return (
-            <PlayGame board={chosenBoard} machines={chosenMachines}/>
+            <PlayGame board={chosenBoard} machinesp1={chosenMachinesp1} machinesp2={chosenMachinesp2}/>
         )
     }
 }

@@ -1,14 +1,14 @@
 import React from "react";
 import "./PlayGame.css";
 
-export function PlayGame({board, machines}) {
+export function PlayGame({board, machinesp1, machinesp2}) {
     return (
         <div className="game">
             <div className="p1-info">
                 <p>Info player 1</p>
                 <p>Show pieces on hover</p>
                 <div className="p1-machinepieces">
-                {machines.map((machine) => (
+                {machinesp1.map((machine) => (
                     <div className="machine-piece">{machine.name}</div>
                 ))}
                 </div>
@@ -22,6 +22,12 @@ export function PlayGame({board, machines}) {
             </div>
             <div className="p2-info">
                 <p>Info player 2</p>
+                <p>Show pieces on hover</p>
+                <div className="p2-machinepieces">
+                {machinesp2.map((machine) => (
+                    <div className="machine-piece">{machine.name}</div>
+                ))}
+                </div>
             </div>
         </div>
     )

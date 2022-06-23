@@ -22,33 +22,35 @@
 .hill {
     background-color: darkslategrey;
 }
-
 .mountain {
     background-color: grey;
 }
-
 .grassland {
     background-color: rgb(58, 220, 58);
 }
-
 .marsh {
     background-color: turquoise;
 }
-
 .forest {
     background-color: forestgreen;
 }
-
 .chasm {
     background-color: rgb(226, 33, 33);
 }
 
-.p1-info {
+.p1-info, p2-info {
     display: grid;
     grid-template-rows: 10% 30% 1fr;
 }
 
-.p1-machinepieces {
+.p1-info {
+    margin-right: -50px;
+}
+.p2-info {
+    margin-left: -100px;
+}
+
+.p1-machinepieces, p2-machinepieces {
     margin-top: 100px;
     display: grid;
     grid-template-columns: 1fr 1fr;
