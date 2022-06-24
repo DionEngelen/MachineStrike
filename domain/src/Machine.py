@@ -90,8 +90,6 @@ class Machine():
                     case "left":
                         self.set_facing("back")
             return self.get_facing()
-        else:
-            return
 
     def turn_right(self, number_of_turns):
         if self.get_active():
@@ -107,8 +105,6 @@ class Machine():
                     case "left":
                         self.set_facing("front")
             return self.get_facing()
-        else:
-            return
 
     def overcharge(self):
         if self.get_active():
