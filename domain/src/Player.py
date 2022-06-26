@@ -19,3 +19,16 @@ class Player():
         return self.__victorypoints
     def get_won(self):
         return self.__won
+
+    def set_name(self, name):
+        self.__name =name
+    def set_has_turn(self, has_turn):
+        self.__has_turn = has_turn
+    def set_machines(self, machines):
+        self.__machines = machines
+    def set_two_machines_were_played(self, two_machines_were_played):
+        self.__two_machines_were_played = two_machines_were_played
+    def set_victorypoints(self, victorypoints):
+        self.__victorypoints = victorypoints
+    def set_won(self, won):
+        self.__won = won

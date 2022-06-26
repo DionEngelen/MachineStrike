@@ -15,8 +15,8 @@ class TestPlayer(unittest.TestCase):
         bristleback = Machine("bristleback", 2, "Ram", 4, 2, 2, 2, ["front"], ["back"], "spray", tiles[6].get_index(), "player2")
         widemaw = Machine("widemaw", 3, "Pull", 6, 3, 2, 2, ["front"], ["back"], "", tiles[4].get_index(), "player2")
         
-        self.player1 =Player("Dion", True, [grazer, clawstrider], False, grazer.get_points() + clawstrider.get_points(), False)
-        self.player2 =Player("John", False, [bristleback, widemaw], False, bristleback.get_points() + widemaw.get_points(), False)
+        self.player1 = Player("Dion", True, [grazer, clawstrider], False, grazer.get_points() + clawstrider.get_points(), False)
+        self.player2 = Player("John", False, [bristleback, widemaw], False, bristleback.get_points() + widemaw.get_points(), False)
 
     def tearDown(self):
         pass
@@ -28,8 +28,10 @@ class TestPlayer(unittest.TestCase):
         self.assertEqual("widemaw", self.player2.get_machines()[1].get_name())
         self.assertEqual(["left", "right"], self.player1.get_machines()[0].get_weak_spots())
 
-    def test_use_method_of_machine(self):
-        pass
+    def test_turn_machine(self):
+        self.assertEqual("front", self.player1.get_machines()[1].get_facing())
+        self.player1.get_machines()[1].turn_left(2)
+        self.assertEqual("back", self.player1.get_machines()[1].get_facing())
 
 if __name__ == "__main__":
     unittest.main()

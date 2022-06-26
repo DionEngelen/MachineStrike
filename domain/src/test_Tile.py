@@ -20,11 +20,6 @@ class TestTile(unittest.TestCase):
         self.assertEqual("hill", self.tile.get_landscape())
         self.assertEqual(2, self.tile.get_attack_buff())
 
-    def test_prohibit_move_when_tile_is_occupied(self):
-        self.assertEqual(False, self.tile1.prohibit_move())
-        self.tile2.set_occupied(True)
-        self.assertEqual(True, self.tile2.prohibit_move())
-
     def test_setters(self):
         self.tile.set_landscape("mountain", 3)
         self.tile.set_occupied(True)

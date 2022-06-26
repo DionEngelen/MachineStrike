@@ -19,10 +19,3 @@ class Tile():
     def set_landscape(self, landscape, attack_buff):
         self.__landscape = landscape
         self.__attack_buff = attack_buff
-        
-
-    def prohibit_move(self):
-        if (self.__occupied):
-            return True
-        else:
-            return False

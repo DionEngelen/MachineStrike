@@ -8,8 +8,8 @@ class TestMachine(unittest.TestCase):
         landscapes = [["forest", 1], ["hill", 2], ["mountain", 3], ["grassland", 0]]
         for tile in range(64):
             tiles.append(Tile(tile, False, landscapes[tile % 4][0], landscapes[tile % 4][1]))
-        self.grazer = Machine("grazer", 1, "Ram", 4, 1, 1, 2, ["front"], ["left", "right"], "gallop", tiles[0].get_index(), "player1")
-        self.clawstrider = Machine("clawstrider", 3, "Melee", 8, 3, 2, 3, ["front"], ["back"], "", tiles[1].get_index(), "player1")
+        self.grazer = Machine("grazer", 1, "Ram", 4, 1, 1, 2, ["front"], ["left", "right"], "gallop", 0, "player1")
+        self.clawstrider = Machine("clawstrider", 3, "Melee", 8, 3, 2, 3, ["front"], ["back"], "", 1, "player1")
 
     def tearDown(self):
         pass
@@ -39,19 +39,23 @@ class TestMachine(unittest.TestCase):
 
     def test_if_machine_turns(self):
         self.assertEqual("front", self.grazer.get_facing())
-        self.grazer.turn_left(1)
+        self.grazer.turn("left")
         self.assertEqual("left", self.grazer.get_facing())
-        self.grazer.turn_right(3)
+        self.grazer.turn("back")
         self.assertEqual("back", self.grazer.get_facing())
-        self.grazer.turn_right(5)
+        self.grazer.turn("left")
         self.assertEqual("left", self.grazer.get_facing())
-        self.grazer.turn_left(2)
+        self.grazer.turn("right")
         self.assertEqual("right", self.grazer.get_facing())
 
     def test_overcharge(self):
         self.grazer.overcharge()
         self.assertEqual(2, self.grazer.get_health())
         self.assertEqual(True, self.grazer.get_overcharged())
+
+    # def test_tile_gets_occupied(self):
+    #     self.tiles[self.clawstrider.get_tile_position()].set_occupied(True)
+    #     self.assertEqual(True, self.tiles[self.clawstrider.get_tile_position()].get_occupied())
 
 if __name__ == "__main__":
     unittest.main()
