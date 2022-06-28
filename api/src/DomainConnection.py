@@ -1,13 +1,23 @@
 from flask import Flask, jsonify, request
 from json import loads
 from flask_cors import CORS
+import sys
+from APImysteries import mysteries
+
+domain_path = mysteries.get('PATH_TO_DOMAIN')
+
+sys.path.append(domain_path)
+from Board import Board
+from Machine import Machine
+from Player import Player
+from Tile import Tile
 
 app = Flask(__name__)
 CORS(app)
 
 @app.route("/", methods = ["POST", "GET"])
 def index():
-    return "Hello1!"
+    return "Hello!"
 
 @app.route("/startgame", methods = ["POST"])
 def start_game():

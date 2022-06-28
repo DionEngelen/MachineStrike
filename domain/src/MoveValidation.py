@@ -2,7 +2,7 @@ def check_obstacles(placeholder, current_tile, tile_destination, movement_range)
     tile_to_check = current_tile
     movement_left = movement_range
     occupied = placeholder
-    if current_tile > tile_destination:
+    if current_tile > tile_destination and abs(current_tile - tile_destination) % 8 <= 3:
         if tile_destination + 1 == occupied\
         and tile_destination + 8 == occupied\
         and not tile_destination + 1 == tile_to_check\
@@ -20,7 +20,7 @@ def check_obstacles(placeholder, current_tile, tile_destination, movement_range)
         if not stranded_tile == tile_destination:
             return False
         return True
-    else:
+    elif current_tile < tile_destination and abs(current_tile - tile_destination) % 8 >= 4:
         if tile_destination - 1 == occupied\
         and tile_destination - 8 == occupied\
         and not tile_destination - 1 == tile_to_check\
