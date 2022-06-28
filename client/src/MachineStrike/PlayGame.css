@@ -19,6 +19,16 @@
     box-sizing: border-box;
 }
 
+.gameboard > div > div {
+    margin-top: 4px;
+    margin-left: 4px;
+}
+
+.start-button {
+    margin-top: 20px;
+    margin-left: 238px;
+}
+
 .hill {
     background-color: darkslategrey;
 }
@@ -54,21 +64,28 @@
     margin-top: 100px;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    row-gap: 10px;
+    gap: 10px;
     place-items: center;
 }
 
 .machine-piece {
     font-size: x-small;
-    width: 60px;
-    height: 60px;
+    width: 58px;
+    height: 58px;
     border: 1px solid black;
-    border-radius: 5%;
+    border-radius: 10%;
 }
 
-.player1machine{
+.player1machine {
     background-color: rgb(188, 108, 222);
 }
-.player2machine{
+.player2machine {
     background-color: rgb(220, 149, 17);
 }
+
+/* .show-machine {
+    width: 50px;
+    height: 50px;
+    background-color: red;
+    place-self: center;
+} */

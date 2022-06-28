@@ -50,9 +50,7 @@ export function PickPieces({chooseMachines, player}) {
             })
             if (response.ok) {
                 const playMachines = await response.json();
-                console.log(playMachines);
                 setFetchedMachines(playMachines);
-                console.log(fetchedMachines);
             }
         } catch (error) {
             console.log(error.toString());
@@ -60,8 +58,7 @@ export function PickPieces({chooseMachines, player}) {
     }
 
     const addMachine = (newMachine) => {
-        console.log(newMachine);
-        const machineOccurrence = machineList.filter(sameMachine => sameMachine === newMachine).length;
+        const machineOccurrence = machineList.filter(sameMachine => sameMachine.name === newMachine.name).length;
         if (machineOccurrence >= 2) {
             return;
         }
@@ -70,14 +67,13 @@ export function PickPieces({chooseMachines, player}) {
             points += machineList[i].points;
         }
         points += newMachine.points;
-        console.log(points);
         if (points > 10){
             return;
         }
         setVictoryPoints(points);
-        machineList.push(newMachine);
+        const copyOfMachine = JSON.parse(JSON.stringify(newMachine))
+        machineList.push(copyOfMachine);
         setMachineList(machineList);
-        console.log(machineList);
     }
 
     const removeMachine = (machineToRemove) => {
@@ -105,8 +101,9 @@ export function PickPieces({chooseMachines, player}) {
                 <h2>{player} choose your pieces</h2>
                 <h3>Selected pieces:</h3>
                 <p>Total points: {victoryPoints > 0 ? victoryPoints : "0"}/10</p>
-                {machineList.length > 0 && machineList.map((machine) => (
+                {machineList.length > 0 && machineList.map((machine, index) => (
                     <button
+                    key={index}
                     className="unit-of-machinesquad"
                     onMouseEnter={() => setMachine(machine)}
                     onMouseLeave={() => setMachine(null)}

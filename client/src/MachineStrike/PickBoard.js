@@ -60,6 +60,7 @@ export function PickBoard({chooseBoard}) {
                 <h2>Choose a board you like</h2>
                 {leftSideImages.map((image, index)=> (
                     <div
+                    key={index}
                     className={image.name}
                     onMouseEnter={() => setLeftSideImage(image.source)}
                     onMouseLeave={() => setLeftSideImage(null)}>
