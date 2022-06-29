@@ -23,8 +23,10 @@ export function MakePlayers({makeplayer1, makeplayer2}) {
             return;
         }
         setErrorMessage("");
-        makeplayer1(playerOne);
-        makeplayer2(playerTwo);
+        const playerOneObject = {name: playerOne}
+        const playerTwoObject = {name: playerTwo}
+        makeplayer1(playerOneObject);
+        makeplayer2(playerTwoObject);
     }
 
     return ( 

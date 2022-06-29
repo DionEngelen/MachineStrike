@@ -24,7 +24,7 @@
     margin-left: 4px;
 }
 
-.start-button {
+#start-button, .end-turn-button {
     margin-top: 20px;
     margin-left: 238px;
 }

@@ -34,7 +34,7 @@ export function MachineStrike() {
     }
     else {
         return (
-            <PlayGame board={chosenBoard} machinesp1={chosenMachinesp1} machinesp2={chosenMachinesp2}/>
+            <PlayGame player1={chosenPlayer1} player2={chosenPlayer2} board={chosenBoard} machinesp1={chosenMachinesp1} machinesp2={chosenMachinesp2}/>
         )
     }
 }

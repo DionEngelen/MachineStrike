@@ -21,8 +21,8 @@ class TestBoard(unittest.TestCase):
         machines.append(sunwing)
 
         players = []
-        player1 = Player("Dion", True, [grazer, clawstrider, longleg], False, 7, False)
-        player2 = Player("John", False, [bristleback, widemaw, sunwing], False, 5, False)
+        player1 = Player("Dion", True, [grazer, clawstrider, longleg])
+        player2 = Player("John", False, [bristleback, widemaw, sunwing])
         players.append(player1)
         players.append(player2)
 
@@ -39,7 +39,7 @@ class TestBoard(unittest.TestCase):
     def test_board_getters(self):
         self.assertEqual("Dion", self.board.get_players()[0].get_name())
         self.assertEqual("John", self.board.get_players()[1].get_name())
-        self.assertEqual(7, self.board.get_players()[0].get_victorypoints())
+        self.assertEqual(0, self.board.get_players()[0].get_victorypoints())
         self.assertEqual(True, self.board.get_tiles()[1].get_occupied())
         self.assertEqual(False, self.board.get_tiles()[5].get_occupied())
         self.assertEqual("hill", self.board.get_tiles()[1].get_landscape())

@@ -49,6 +49,7 @@ class TestMachine(unittest.TestCase):
         self.assertEqual("right", self.grazer.get_facing())
 
     def test_overcharge(self):
+        self.grazer.set_sprinted(True)
         self.grazer.overcharge()
         self.assertEqual(2, self.grazer.get_health())
         self.assertEqual(True, self.grazer.get_overcharged())

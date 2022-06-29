@@ -3,29 +3,57 @@ import { useState } from "react";
 import { hiddenStartGameKey } from "./hiddenkeys";
 import "./PlayGame.css";
 
-export function PlayGame({board, machinesp1, machinesp2}) {
+export function PlayGame({player1, player2, board, machinesp1, machinesp2}) {
     let [tileBeingDraggedTo, setTileBeingDraggedTo] = useState();
-    const [showMachineP1, setShowMachineP1] = useState(null)
-    const [showMachineP2, setShowMachineP2] = useState(null)
+    const [gameState, setGameState] = useState();
+    const [startButtonIsClicked, setStartButtonIsClicked] = useState(false);
+    const [showMachineP1, setShowMachineP1] = useState(null);
+    const [showMachineP2, setShowMachineP2] = useState(null);
 
     async function trySetBoard() {
+        setStartButtonIsClicked(true);
         try {
             const response = await fetch(hiddenStartGameKey(), {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({"currentBoard": board, "player1Machines": machinesp1,
+                body: JSON.stringify({"player1": player1, "player2": player2, "currentBoard": board, "player1Machines": machinesp1,
             "player2Machines": machinesp2})
             })
             if (response.ok) {
                 const startBoard = await response.json();
-                console.log(startBoard)
+                console.log(startBoard);
+                setGameState(startBoard);
             }
         } catch (error) {
             console.log(error.toString());
         }
+    }
+
+    const checkIfAllMachinesHaveTilePositions = () => {
+        if (startButtonIsClicked) {
+            return false;
+        }
+        for (let i = 0; i < machinesp1.length; i++) {
+            if (machinesp1[i].tile_position === null || machinesp1[i].tile_position === undefined) {
+                return false;
+            }
+        }
+        for (let i = 0; i < machinesp2.length; i++) {
+            if (machinesp2[i].tile_position === null || machinesp2[i].tile_position === undefined) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    const checkIfPlayerHasTurn = player => {
+        if (player.has_turn) {
+            return true;
+        }
+        return false;
     }
 
     const dragStart = (e) => {
@@ -101,9 +129,12 @@ export function PlayGame({board, machinesp1, machinesp2}) {
                     onDrop={dragDrop}
                     ></div>
                     ))}
-                <button className="start-button"
-                disabled={false}
-                onClick={() => trySetBoard()}>Start game</button>
+                {checkIfAllMachinesHaveTilePositions() && <button id="start-button"
+                onClick={() => trySetBoard()}>Start game</button>}
+                {checkIfPlayerHasTurn(gameState.player1) && <button className="end-turn-button"
+                >End turn, {player1.name}</button>}
+                {checkIfPlayerHasTurn(gameState.player2) && <button className="end-turn-button"
+                >End turn, {player2.name}</button>}
             </div>
             <div className="p2-info">
                 <p>Info player 2</p>

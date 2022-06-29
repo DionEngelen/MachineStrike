@@ -1,4 +1,5 @@
 from Player import Player
+from Machine import Machine
 from Tile import Tile
 
 class Board():

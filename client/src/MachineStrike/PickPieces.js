@@ -98,7 +98,7 @@ export function PickPieces({chooseMachines, player}) {
     return (
         <div className="pick-pieces">
             <div className="show-list">
-                <h2>{player} choose your pieces</h2>
+                <h2>{player.name} choose your pieces</h2>
                 <h3>Selected pieces:</h3>
                 <p>Total points: {victoryPoints > 0 ? victoryPoints : "0"}/10</p>
                 {machineList.length > 0 && machineList.map((machine, index) => (

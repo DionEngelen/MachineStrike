@@ -1,11 +1,13 @@
+from Machine import Machine
+
 class Player():
-    def __init__(self, name, has_turn, machines, two_machines_were_played, victorypoints, won):
+    def __init__(self, name, has_turn, machines):
         self.__name = name
         self.__has_turn = has_turn
         self.__machines = machines
-        self.__two_machines_were_played = two_machines_were_played
-        self.__victorypoints = victorypoints
-        self.__won = won
+        self.__two_machines_were_played = False
+        self.__victorypoints = 0
+        self.__won = False
 
     def get_name(self):
         return self.__name
