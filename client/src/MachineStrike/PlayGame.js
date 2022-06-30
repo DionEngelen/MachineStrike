@@ -49,11 +49,53 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2}) {
         return true;
     }
 
-    const checkIfPlayerHasTurn = player => {
-        if (player.has_turn) {
-            return true;
+    const navigateBoard = (e) => {
+        if (!e.target.draggable && gameState) {
+            const machinePiece = document.getElementById(e.target.id)
+            let currentTile = document.getElementById(e.target.parentElement.id)
+            let integerId = parseInt(e.target.parentElement.id)
+            switch(e.key) {
+                case "ArrowUp":
+                    integerId -= 8
+                    currentTile = document.querySelector(`#${CSS.escape(integerId.toString())}`)
+                    currentTile.appendChild(machinePiece);
+                    break;
+                case "ArrowRight":
+                    integerId += 1
+                    currentTile = document.querySelector(`#${CSS.escape(integerId.toString())}`)
+                    currentTile.appendChild(machinePiece);
+                    break;
+                case "ArrowDown":
+                    integerId += 8
+                    currentTile = document.querySelector(`#${CSS.escape(integerId.toString())}`)
+                    currentTile.appendChild(machinePiece);
+                    break;
+                case "ArrowLeft":
+                    integerId -= 1
+                    currentTile = document.querySelector(`#${CSS.escape(integerId.toString())}`)
+                    currentTile.appendChild(machinePiece);
+                    break;
+                default:
+                    break;
+            }
         }
-        return false;
+    }
+
+    const showMovementPreview = (e) => {
+        const machinePiece = document.getElementById(e.target.id)
+        const selectedTile = document.getElementById(e.target.parentElement.id)
+        console.log(machinePiece);
+        console.log(selectedTile);
+    }
+
+    const endTurn = () => {
+        if (gameState.board.players[0].has_turn) {
+            gameState.board.players[0].has_turn = false
+            gameState.board.players[1].has_turn = true
+        } else {
+            gameState.board.players[0].has_turn = true
+            gameState.board.players[1].has_turn = false
+        }
     }
 
     const dragStart = (e) => {
@@ -105,6 +147,9 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2}) {
                         onMouseEnter={() => setShowMachineP1(machine)}
                         onMouseLeave={() => setShowMachineP1(null)}
                         className="player1machine machine-piece"
+                        // onClick={showMovementPreview}
+                        tabIndex={-1}
+                        onKeyDown={navigateBoard}
                         draggable={true}
                         onDragStart={dragStart}
                         onDragOver={(e)=> e.preventDefault()}
@@ -129,12 +174,13 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2}) {
                     onDrop={dragDrop}
                     ></div>
                     ))}
-                {checkIfAllMachinesHaveTilePositions() && <button id="start-button"
+                {checkIfAllMachinesHaveTilePositions() &&<button id="start-button"
                 onClick={() => trySetBoard()}>Start game</button>}
-                {checkIfPlayerHasTurn(gameState.player1) && <button className="end-turn-button"
-                >End turn, {player1.name}</button>}
-                {checkIfPlayerHasTurn(gameState.player2) && <button className="end-turn-button"
-                >End turn, {player2.name}</button>}
+                {gameState && <button className="end-turn-button"
+                onClick={() => endTurn()}
+                disabled={!gameState.board.players[0].two_machines_were_played ||
+                !gameState.board.players[1].two_machines_were_played}
+                >End turn</button>}
             </div>
             <div className="p2-info">
                 <p>Info player 2</p>
@@ -148,6 +194,8 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2}) {
                     onMouseEnter={() => setShowMachineP2(machine)}
                     onMouseLeave={() => setShowMachineP2(null)}
                     className="player2machine machine-piece"
+                    tabIndex={-1}
+                    onKeyDown={navigateBoard}
                     draggable={true}
                     onDragStart={dragStart}
                     onDragOver={(e)=> e.preventDefault()}
