@@ -37,7 +37,9 @@ def start_game():
 
 @app.route("/playgame", methods = ["POST"])
 def play_game():
-    return "Hello3!"
+    data = request.get_json()
+    board = data["board"]
+    return jsonify(board)
 
 if __name__ == "__main__":
     app.run(debug = True, port=4000)
