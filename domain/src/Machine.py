@@ -204,6 +204,6 @@ class Machine():
                     
     def overcharge(self):
         if self.get_active():
-            if self.get_health() >= 1 and ((self.get_attacked() and self.get_moved()) or self.get_sprinted()):
+            if self.get_health() > 1 and (self.get_attacked() or self.get_moved() or self.get_sprinted()):
                 self.set_overcharged(True)
                 self.set_health(self.get_health() - 2)

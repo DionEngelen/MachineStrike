@@ -3,12 +3,12 @@ import { useState } from "react";
 import { hiddenStartGameKey, hiddenPlayGameKey } from "./hiddenkeys";
 import "./PlayGame.css";
 
-export function PlayGame({player1, player2, board, machinesp1, machinesp2}) {
+export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMachinesp1, setMachinesp2}) {
     let [tileBeingDraggedTo, setTileBeingDraggedTo] = useState();
     const [gameState, setGameState] = useState();
     const [startButtonIsClicked, setStartButtonIsClicked] = useState(false);
-    const [showMachineP1, setShowMachineP1] = useState(null);
-    const [showMachineP2, setShowMachineP2] = useState(null);
+    //const [showMachineP1, setShowMachineP1] = useState(null);
+    //const [showMachineP2, setShowMachineP2] = useState(null);
 
     async function trySetBoard() {
         setStartButtonIsClicked(true);
@@ -27,6 +27,17 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2}) {
                 const startBoard = await response.json();
                 console.log(startBoard);
                 setGameState(startBoard);
+                const initiatedMachinesp1 = []
+                const initiatedMachinesp2 = []
+                for (let i = 0; i < startBoard.board.machines.length; i++) {
+                    if (startBoard.board.machines[i].team === "player1") {
+                        initiatedMachinesp1.push(startBoard.board.machines[i])
+                    } else {
+                        initiatedMachinesp2.push(startBoard.board.machines[i])
+                    }
+                }
+                setMachinesp1(initiatedMachinesp1)
+                setMachinesp2(initiatedMachinesp2)
             }
         } catch (error) {
             console.log(error.toString());
@@ -53,6 +64,17 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2}) {
                 const newBoard = await response.json();
                 console.log(newBoard);
                 setGameState(newBoard);
+                const playedMachinesp1 = []
+                const playedMachinesp2 = []
+                for (let i = 0; i < newBoard.board.machines.length; i++) {
+                    if (newBoard.board.machines[i].team === "player1") {
+                        playedMachinesp1.push(newBoard.board.machines[i])
+                    } else {
+                        playedMachinesp2.push(newBoard.board.machines[i])
+                    }
+                }
+                setMachinesp1(playedMachinesp1)
+                setMachinesp2(playedMachinesp2)
             } 
         } catch (error) {
             console.log(error)
@@ -97,6 +119,7 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2}) {
                         break;
                     }
                     currentTile.appendChild(machinePiece);
+                    e.target.focus()
                     break;
                 case "ArrowRight":
                     integerId += 1;
@@ -111,6 +134,7 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2}) {
                         break;
                     }
                     currentTile.appendChild(machinePiece);
+                    e.target.focus()
                     break;
                 case "ArrowDown":
                     integerId += 8
@@ -122,6 +146,7 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2}) {
                         break;
                     }
                     currentTile.appendChild(machinePiece);
+                    e.target.focus()
                     break;
                 case "ArrowLeft":
                     integerId -= 1;
@@ -136,14 +161,15 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2}) {
                         break;
                     }
                     currentTile.appendChild(machinePiece);
+                    e.target.focus()
                     break;
                 case "Enter":
+                    e.target.blur()
                     tryPlayGame(integerId, machine)
                     break;
                 default:
                     break;
-            }
-            e.target.focus()
+            }  
         }
     }
 
@@ -209,12 +235,12 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2}) {
         if (gameState) {
             const integerId = parseInt(e.target.parentElement.id)
             for (let i = 1; i <= machine.movement_range; i++) {
-                previewMovement1(integerId, i, integerId, machine);
+                previewMovement1(machine.tile_position, i, machine.tile_position, machine);
                 if (i > 1) {
-                    previewMovement2(integerId, i, integerId, machine);
+                    previewMovement2(machine.tile_position, i, machine.tile_position, machine);
                 }
                 if (i > 2) {
-                    previewMovement3(integerId, i, integerId, machine);
+                    previewMovement3(machine.tile_position, i, machine.tile_position, machine);
                 }
             }
         }
@@ -361,12 +387,12 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2}) {
         if (gameState) {
             const integerId = parseInt(e.target.parentElement.id);
             for (let i = 1; i <= machine.movement_range; i++) {
-                clearMovement1(integerId, i, integerId, machine);
+                clearMovement1(machine.tile_position, i, machine.tile_position, machine);
                 if (i > 1) {
-                    clearMovement2(integerId, i, integerId, machine);
+                    clearMovement2(machine.tile_position, i, machine.tile_position, machine);
                 }
                 if (i > 2) {
-                    clearMovement3(integerId, i, integerId, machine);
+                    clearMovement3(machine.tile_position, i, machine.tile_position, machine);
                 }
             }   
         }
