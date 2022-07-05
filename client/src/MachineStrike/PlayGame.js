@@ -33,7 +33,13 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2}) {
         }
     }
 
-    async function tryPlayGame() {
+    async function tryPlayGame(tileIndex, machine) {
+        for (let i = 0; i < gameState.board.machines.length; i++) {
+            if (machine.tile_position === gameState.board.machines[i].tile_position) {
+                machine = gameState.board.machines[i]
+                break;
+            }
+        }
         try {
             const response = await fetch(hiddenPlayGameKey(), {
                 method: 'POST',
@@ -41,7 +47,7 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2}) {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({"board": gameState})
+                body: JSON.stringify({"board": gameState.board, "machine": machine, "facing": machine.facing, "tile": tileIndex})
             })
             if (response.ok) {
                 const newBoard = await response.json();
@@ -75,7 +81,7 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2}) {
         return true;
     }
 
-    const navigateBoard = (e) => {
+    const navigateBoard = (e, machine) => {
         if (!e.target.draggable && gameState) {
             const machinePiece = document.getElementById(e.target.id);
             let currentTile = document.getElementById(e.target.parentElement.id);
@@ -83,47 +89,61 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2}) {
             switch(e.key) {
                 case "ArrowUp":
                     integerId -= 8;
+                    if (gameState.board.tiles[integerId].landscape === "chasm" && machine.type !== "Swoop") {
+                        break;
+                    }
                     currentTile = document.querySelector(`#${CSS.escape(integerId.toString())}`);
+                    if (currentTile.firstChild.id.includes("machine")) {
+                        break;
+                    }
                     currentTile.appendChild(machinePiece);
                     break;
                 case "ArrowRight":
                     integerId += 1;
+                    if (gameState.board.tiles[integerId].landscape === "chasm" && machine.type !== "Swoop") {
+                        break;
+                    }
                     if (integerId % 8 === 0) {
                         break;
                     }
                     currentTile = document.querySelector(`#${CSS.escape(integerId.toString())}`);
+                    if (currentTile.firstChild.id.includes("machine")) {
+                        break;
+                    }
                     currentTile.appendChild(machinePiece);
                     break;
                 case "ArrowDown":
                     integerId += 8
+                    if (gameState.board.tiles[integerId].landscape === "chasm" && machine.type !== "Swoop") {
+                        break;
+                    }
                     currentTile = document.querySelector(`#${CSS.escape(integerId.toString())}`);
+                    if (currentTile.firstChild.id.includes("machine")) {
+                        break;
+                    }
                     currentTile.appendChild(machinePiece);
                     break;
                 case "ArrowLeft":
                     integerId -= 1;
+                    if (gameState.board.tiles[integerId].landscape === "chasm" && machine.type !== "Swoop") {
+                        break;
+                    }
                     if (integerId % 8 === 7) {
                         break;
                     }
                     currentTile = document.querySelector(`#${CSS.escape(integerId.toString())}`);
+                    if (currentTile.firstChild.id.includes("machine")) {
+                        break;
+                    }
                     currentTile.appendChild(machinePiece);
                     break;
                 case "Enter":
-                    if (e.target.id.includes("p1")) {
-                        const stringMachineId = e.target.id.split("e")
-                        const integerMachineId = parseInt(stringMachineId[1])
-                        gameState.board.machines[integerMachineId].tile_position = integerId
-                        setGameState(gameState)
-                    } else {
-                        const stringMachineId = e.target.id.split("e")
-                        const integerMachineId = parseInt(stringMachineId[1])
-                        gameState.board.machines[integerMachineId + machinesp1.length].tile_position = integerId
-                        setGameState(gameState)
-                    }
-                    tryPlayGame()
+                    tryPlayGame(integerId, machine)
                     break;
                 default:
                     break;
             }
+            e.target.focus()
         }
     }
 
@@ -187,29 +207,36 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2}) {
 
     const showMovementPreview = (e, machine) => {
         if (gameState) {
-            const integerId = parseInt(e.target.parentElement.id);
+            const integerId = parseInt(e.target.parentElement.id)
             for (let i = 1; i <= machine.movement_range; i++) {
-                previewMovement1(integerId, i, integerId)
+                previewMovement1(integerId, i, integerId, machine);
                 if (i > 1) {
-                    previewMovement2(integerId, i, integerId)
+                    previewMovement2(integerId, i, integerId, machine);
+                }
+                if (i > 2) {
+                    previewMovement3(integerId, i, integerId, machine);
                 }
             }
         }
     }
 
-    const previewMovement1 = (integerId, i, currentTile) => {
+    const previewMovement1 = (integerId, i, currentTile, machine) => {
         const leftPreview = integerId - i;
         const leftTile = document.querySelector(`#${CSS.escape(leftPreview.toString())}`);
-        if (leftTile && currentTile % 8 !== 0 && leftPreview % 8 !== 7 && gameState.board.tiles[leftPreview].landscape !== "chasm") {
-            if (!leftTile.firstChild) {
+        if (leftTile && currentTile % 8 !== 0 && leftPreview % 8 !== 7 &&
+        (gameState.board.tiles[leftPreview].landscape !== "chasm" || machine.type === "Swoop")) {
+            if (currentTile % 8 !== 1 || leftPreview % 8 !== 6) {
+                if (!leftTile.firstChild) {
                 let tilePreviewLeft = document.createElement("div");
                 tilePreviewLeft.classList.add("move-preview");
                 leftTile.appendChild(tilePreviewLeft);
+                }
             }
+            
         }
         const upPreview = integerId - i * 8;
         const upTile = document.querySelector(`#${CSS.escape(upPreview.toString())}`);
-        if (upTile && gameState.board.tiles[upPreview].landscape !== "chasm") {            
+        if (upTile && (gameState.board.tiles[upPreview].landscape !== "chasm" || machine.type === "Swoop")) {            
             if (!upTile.firstChild) {
                 let tilePreviewUp = document.createElement("div");
                 tilePreviewUp.classList.add("move-preview");
@@ -218,17 +245,20 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2}) {
         }
         const rightPreview = integerId + i;
         const rightTile = document.querySelector(`#${CSS.escape(rightPreview.toString())}`);
-        if (rightTile && currentTile % 8 !== 7 && rightPreview % 8 !== 0 && gameState.board.tiles[rightPreview].landscape !== "chasm") {
-
-            if (!rightTile.firstChild) {
+        if (rightTile && currentTile % 8 !== 7 && rightPreview % 8 !== 0 &&
+        (gameState.board.tiles[rightPreview].landscape !== "chasm" || machine.type === "Swoop")) {
+            if (currentTile % 8 !== 6 || rightPreview % 8 !== 1) {
+                if (!rightTile.firstChild) {
                 let tilePreviewRight = document.createElement("div");
                 tilePreviewRight.classList.add("move-preview");
                 rightTile.appendChild(tilePreviewRight);
+                }
             }
+            
         }
         const downPreview = integerId + i * 8;
         const downTile = document.querySelector(`#${CSS.escape(downPreview.toString())}`);
-        if (downTile && gameState.board.tiles[downPreview].landscape !== "chasm") {
+        if (downTile && (gameState.board.tiles[downPreview].landscape !== "chasm" || machine.type === "Swoop")) {
             if (!downTile.firstChild) {
                 let tilePreviewDown = document.createElement("div");
                 tilePreviewDown.classList.add("move-preview");
@@ -237,10 +267,11 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2}) {
         }   
     }
 
-    const previewMovement2 = (integerId, i, currentTile) => {
+    const previewMovement2 = (integerId, i, currentTile, machine) => {
         const leftPreview = integerId - (i - 1) - 8;
         const leftTile = document.querySelector(`#${CSS.escape(leftPreview.toString())}`);
-        if (leftTile && currentTile % 8 !== 0 && leftPreview % 8 !== 7 && gameState.board.tiles[leftPreview].landscape !== "chasm") {
+        if (leftTile && currentTile % 8 !== 0 && leftPreview % 8 !== 7 &&
+        (gameState.board.tiles[leftPreview].landscape !== "chasm" || machine.type === "Swoop")) {
             if (!leftTile.firstChild) {
                 let tilePreviewLeft = document.createElement("div");
                 tilePreviewLeft.classList.add("move-preview");
@@ -249,7 +280,7 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2}) {
         }
         const upPreview = integerId - (i - 1) * 8 + 1;
         const upTile = document.querySelector(`#${CSS.escape(upPreview.toString())}`);
-        if (upTile && upPreview % 8 !== 0 && gameState.board.tiles[upPreview].landscape !== "chasm") {            
+        if (upTile && upPreview % 8 !== 0 && (gameState.board.tiles[upPreview].landscape !== "chasm" || machine.type === "Swoop")) {            
             if (!upTile.firstChild) {
                 let tilePreviewUp = document.createElement("div");
                 tilePreviewUp.classList.add("move-preview");
@@ -258,7 +289,8 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2}) {
         }
         const rightPreview = integerId + (i - 1) + 8;
         const rightTile = document.querySelector(`#${CSS.escape(rightPreview.toString())}`);
-        if (rightTile && currentTile % 8 !== 7 && rightPreview % 8 !== 0 && gameState.board.tiles[rightPreview].landscape !== "chasm") {
+        if (rightTile && currentTile % 8 !== 7 && rightPreview % 8 !== 0 &&
+        (gameState.board.tiles[rightPreview].landscape !== "chasm" || machine.type === "Swoop")) {
             if (!rightTile.firstChild) {
                 let tilePreviewRight = document.createElement("div");
                 tilePreviewRight.classList.add("move-preview");
@@ -267,7 +299,7 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2}) {
         }
         const downPreview = integerId + (i - 1) * 8 - 1;
         const downTile = document.querySelector(`#${CSS.escape(downPreview.toString())}`);
-        if (downTile && downPreview % 8 !== 7 && gameState.board.tiles[downPreview].landscape !== "chasm") {
+        if (downTile && downPreview % 8 !== 7 && (gameState.board.tiles[downPreview].landscape !== "chasm" || machine.type === "Swoop")) {
             if (!downTile.firstChild) {
                 let tilePreviewDown = document.createElement("div");
                 tilePreviewDown.classList.add("move-preview");
@@ -276,30 +308,85 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2}) {
         }   
     }
 
+    const previewMovement3 = (integerId, i, currentTile, machine) => {
+        const leftPreview = integerId - (i - 2) - 16;
+        const leftTile = document.querySelector(`#${CSS.escape(leftPreview.toString())}`);
+        if (leftTile && currentTile % 8 !== 0 && leftPreview % 8 !== 7 &&
+        (gameState.board.tiles[leftPreview].landscape !== "chasm" || machine.type === "Swoop")) {
+            if (!leftTile.firstChild && leftPreview % 8 !== 7) {
+            let tilePreviewLeft = document.createElement("div");
+            tilePreviewLeft.classList.add("move-preview");
+            leftTile.appendChild(tilePreviewLeft);
+            }  
+        }
+        const upPreview = integerId - ((i - 2) * 8) + 2;
+        const upTile = document.querySelector(`#${CSS.escape(upPreview.toString())}`);
+        if (upTile && (gameState.board.tiles[upPreview].landscape !== "chasm" || machine.type === "Swoop")) {            
+            if (!upTile.firstChild && upPreview % 8 !== 0) {
+                let tilePreviewUp = document.createElement("div");
+                tilePreviewUp.classList.add("move-preview");
+                upTile.appendChild(tilePreviewUp);
+            }
+        }
+        const rightPreview = integerId + (i - 2) + 16;
+        const rightTile = document.querySelector(`#${CSS.escape(rightPreview.toString())}`);
+        if (rightTile && currentTile % 8 !== 7 &&
+        (gameState.board.tiles[rightPreview].landscape !== "chasm" || machine.type === "Swoop")) {
+            if (!rightTile.firstChild && rightPreview % 8 !== 0) {
+            let tilePreviewRight = document.createElement("div");
+            tilePreviewRight.classList.add("move-preview");
+            rightTile.appendChild(tilePreviewRight);
+            }
+        }
+        const downPreview = integerId + ((i - 2) * 8) - 2;
+        const downTile = document.querySelector(`#${CSS.escape(downPreview.toString())}`);
+        if (downTile && (gameState.board.tiles[downPreview].landscape !== "chasm" || machine.type === "Swoop")) {
+            if (!downTile.firstChild && downPreview % 8 !== 7) {
+                let tilePreviewDown = document.createElement("div");
+                tilePreviewDown.classList.add("move-preview");
+                downTile.appendChild(tilePreviewDown);
+            }
+        }   
+    }
+
+
+
+
+
+
+
+    
+
     const clearMovementPreview = (e, machine) => {
         if (gameState) {
             const integerId = parseInt(e.target.parentElement.id);
             for (let i = 1; i <= machine.movement_range; i++) {
-                clearMovement1(integerId, i, integerId)
+                clearMovement1(integerId, i, integerId, machine);
                 if (i > 1) {
-                    clearMovement2(integerId, i, integerId)
+                    clearMovement2(integerId, i, integerId, machine);
+                }
+                if (i > 2) {
+                    clearMovement3(integerId, i, integerId, machine);
                 }
             }   
         }
     }
 
-    const clearMovement1 = (integerId, i, currentTile) => {
+    const clearMovement1 = (integerId, i, currentTile, machine) => {
         const leftPreview = integerId - i;
         const leftTile = document.querySelector(`#${CSS.escape(leftPreview.toString())}`);
-        if (leftTile && currentTile % 8 !== 0 && leftPreview % 8 !== 7 && gameState.board.tiles[leftPreview].landscape !== "chasm") {
-            if (leftTile.firstChild.className !== "player1machine machine-piece" &&
-            leftTile.firstChild.className !== "player2machine machine-piece") {
-            leftTile.removeChild(leftTile.lastChild)
+        if (leftTile && currentTile % 8 !== 0 && leftPreview % 8 !== 7 &&
+        (gameState.board.tiles[leftPreview].landscape !== "chasm" || machine.type === "Swoop")) {
+            if (currentTile % 8 !== 1 || leftPreview % 8 !== 6) {
+                if (leftTile.firstChild.className !== "player1machine machine-piece" &&
+                leftTile.firstChild.className !== "player2machine machine-piece") {
+                leftTile.removeChild(leftTile.lastChild)
+                }
             }
         }
         const upPreview = integerId - i * 8;
         const upTile = document.querySelector(`#${CSS.escape(upPreview.toString())}`);
-        if (upTile && gameState.board.tiles[upPreview].landscape !== "chasm") {
+        if (upTile && (gameState.board.tiles[upPreview].landscape !== "chasm" || machine.type === "Swoop")) {
             if (upTile.firstChild.className !== "player1machine machine-piece" &&
             upTile.firstChild.className !== "player2machine machine-piece") {
             upTile.removeChild(upTile.lastChild)
@@ -307,15 +394,19 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2}) {
         }
         const rightPreview = integerId + i;
         const rightTile = document.querySelector(`#${CSS.escape(rightPreview.toString())}`);
-        if (rightTile && currentTile % 8 !== 7 && rightPreview % 8 !== 0 && gameState.board.tiles[rightPreview].landscape !== "chasm") {
-            if (rightTile.firstChild.className !== "player1machine machine-piece" &&
-            rightTile.firstChild.className !== "player2machine machine-piece") {
-            rightTile.removeChild(rightTile.lastChild)
+        if (rightTile && currentTile % 8 !== 7 && rightPreview % 8 !== 0 &&
+        (gameState.board.tiles[rightPreview].landscape !== "chasm" || machine.type === "Swoop")) {
+            if (currentTile % 8 !== 6 || rightPreview % 8 !== 1) {
+                if (rightTile.firstChild.className !== "player1machine machine-piece" &&
+                rightTile.firstChild.className !== "player2machine machine-piece") {
+                rightTile.removeChild(rightTile.lastChild)
+                }
             }
+            
         }
         const downPreview = integerId + i * 8;
         const downTile = document.querySelector(`#${CSS.escape(downPreview.toString())}`);
-        if (downTile && gameState.board.tiles[downPreview].landscape !== "chasm") {
+        if (downTile && (gameState.board.tiles[downPreview].landscape !== "chasm" || machine.type === "Swoop")) {
             if (downTile.firstChild.className !== "player1machine machine-piece" &&
             downTile.firstChild.className !== "player2machine machine-piece") {
             downTile.removeChild(downTile.lastChild)
@@ -323,10 +414,11 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2}) {
         }
     }
 
-    const clearMovement2 = (integerId, i, currentTile) => {
+    const clearMovement2 = (integerId, i, currentTile, machine) => {
         const leftPreview = integerId - (i - 1) - 8;
         const leftTile = document.querySelector(`#${CSS.escape(leftPreview.toString())}`);
-        if (leftTile && currentTile % 8 !== 0 && leftPreview % 8 !== 7 && gameState.board.tiles[leftPreview].landscape !== "chasm") {
+        if (leftTile && currentTile % 8 !== 0 && leftPreview % 8 !== 7 &&
+        (gameState.board.tiles[leftPreview].landscape !== "chasm" || machine.type === "Swoop")) {
             if (leftTile.firstChild.className !== "player1machine machine-piece" &&
             leftTile.firstChild.className !== "player2machine machine-piece") {
             leftTile.removeChild(leftTile.lastChild)
@@ -334,7 +426,7 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2}) {
         }
         const upPreview = integerId - (i - 1) * 8 + 1;
         const upTile = document.querySelector(`#${CSS.escape(upPreview.toString())}`);
-        if (upTile && upPreview % 8 !== 0 && gameState.board.tiles[upPreview].landscape !== "chasm") {
+        if (upTile && upPreview % 8 !== 0 && (gameState.board.tiles[upPreview].landscape !== "chasm" || machine.type === "Swoop")) {
             if (upTile.firstChild.className !== "player1machine machine-piece" &&
             upTile.firstChild.className !== "player2machine machine-piece") {
             upTile.removeChild(upTile.lastChild)
@@ -342,7 +434,8 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2}) {
         }
         const rightPreview = integerId + (i - 1) + 8;
         const rightTile = document.querySelector(`#${CSS.escape(rightPreview.toString())}`);
-        if (rightTile && currentTile % 8 !== 7 && rightPreview % 8 !== 0 && gameState.board.tiles[rightPreview].landscape !== "chasm") {
+        if (rightTile && currentTile % 8 !== 7 && rightPreview % 8 !== 0 &&
+        (gameState.board.tiles[rightPreview].landscape !== "chasm" || machine.type === "Swoop")) {
             if (rightTile.firstChild.className !== "player1machine machine-piece" &&
             rightTile.firstChild.className !== "player2machine machine-piece") {
             rightTile.removeChild(rightTile.lastChild)
@@ -350,9 +443,46 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2}) {
         }
         const downPreview = integerId + (i - 1) * 8 - 1;
         const downTile = document.querySelector(`#${CSS.escape(downPreview.toString())}`);
-        if (downTile && downPreview % 8 !== 7 && gameState.board.tiles[downPreview].landscape !== "chasm") {
+        if (downTile && downPreview % 8 !== 7 && (gameState.board.tiles[downPreview].landscape !== "chasm" || machine.type === "Swoop")) {
             if (downTile.firstChild.className !== "player1machine machine-piece" &&
             downTile.firstChild.className !== "player2machine machine-piece") {
+            downTile.removeChild(downTile.lastChild)
+            }
+        }
+    }
+
+    const clearMovement3 = (integerId, i, currentTile, machine) => {
+        const leftPreview = integerId - (i - 2) - 16;
+        const leftTile = document.querySelector(`#${CSS.escape(leftPreview.toString())}`);
+        if (leftTile && currentTile % 8 !== 0 && leftPreview % 8 !== 7 &&
+        (gameState.board.tiles[leftPreview].landscape !== "chasm" || machine.type === "Swoop")) {
+            if (leftTile.firstChild.className !== "player1machine machine-piece" &&
+            leftTile.firstChild.className !== "player2machine machine-piece" && leftPreview % 8 !== 7) {
+            leftTile.removeChild(leftTile.lastChild)
+            }
+        }
+        const upPreview = integerId - ((i - 2) * 8) + 2;
+        const upTile = document.querySelector(`#${CSS.escape(upPreview.toString())}`);
+        if (upTile && upPreview % 8 !== 0 && (gameState.board.tiles[upPreview].landscape !== "chasm" || machine.type === "Swoop")) {
+            if (upTile.firstChild.className !== "player1machine machine-piece" &&
+            upTile.firstChild.className !== "player2machine machine-piece" && upPreview % 8 !== 0) {
+            upTile.removeChild(upTile.lastChild)
+            }
+        }
+        const rightPreview = integerId + (i - 2) + 16;
+        const rightTile = document.querySelector(`#${CSS.escape(rightPreview.toString())}`);
+        if (rightTile && currentTile % 8 !== 7 && rightPreview % 8 !== 0 &&
+        (gameState.board.tiles[rightPreview].landscape !== "chasm" || machine.type === "Swoop")) {
+            if (rightTile.firstChild.className !== "player1machine machine-piece" &&
+            rightTile.firstChild.className !== "player2machine machine-piece" && rightPreview % 8 !== 0) {
+            rightTile.removeChild(rightTile.lastChild)
+            }
+        }
+        const downPreview = integerId + ((i - 2) * 8) - 2;
+        const downTile = document.querySelector(`#${CSS.escape(downPreview.toString())}`);
+        if (downTile && downPreview % 8 !== 7 && (gameState.board.tiles[downPreview].landscape !== "chasm" || machine.type === "Swoop")) {
+            if (downTile.firstChild.className !== "player1machine machine-piece" &&
+            downTile.firstChild.className !== "player2machine machine-piece" && downPreview % 8 !== 7) {
             downTile.removeChild(downTile.lastChild)
             }
         }
@@ -369,12 +499,12 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2}) {
                         <div
                         key={index}
                         id={"p1machine" + index}
-                        onMouseEnter={(e) => showMovementPreview(e, machine)}
-                        onMouseLeave={(e) => clearMovementPreview(e, machine)}
+                        onFocus={(e) => showMovementPreview(e, machine)}
+                        onBlur={(e) => clearMovementPreview(e, machine)}
                         className="player1machine machine-piece"
                         // onClick={(e) => showMovementPreview(e, machine)}
                         tabIndex={-1}
-                        onKeyDown={navigateBoard}
+                        onKeyDown={(e) => navigateBoard(e, machine)}
                         draggable={true}
                         onDragStart={dragStart}
                         onDragOver={(e)=> e.preventDefault()}
@@ -399,7 +529,7 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2}) {
                     onDrop={dragDrop}
                     ></div>
                     ))}
-                {checkIfAllMachinesHaveTilePositions() &&<button id="start-button"
+                {checkIfAllMachinesHaveTilePositions() && <button id="start-button"
                 onClick={() => trySetBoard()}>Start game</button>}
                 {gameState && <button className="end-turn-button"
                 onClick={() => endTurn()}
@@ -416,11 +546,11 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2}) {
                     <div
                     key={index}
                     id={"p2machine" + index}
-                    onMouseEnter={(e) => showMovementPreview(e, machine)}
-                    onMouseLeave={(e) => clearMovementPreview(e, machine)}
+                    onFocus={(e) => showMovementPreview(e, machine)}
+                    onBlur={(e) => clearMovementPreview(e, machine)}
                     className="player2machine machine-piece"
                     tabIndex={-1}
-                    onKeyDown={navigateBoard}
+                    onKeyDown={(e) => navigateBoard(e, machine)}
                     draggable={true}
                     onDragStart={dragStart}
                     onDragOver={(e)=> e.preventDefault()}

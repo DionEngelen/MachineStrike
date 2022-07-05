@@ -3,7 +3,8 @@ from shutil import move
 
 class Machine():
     def __init__(self, name, points, type, health, attack, attack_range,
-    movement_range, armor, weak_spots, ability, tile_position, team):
+    movement_range, armor, weak_spots, ability, tile_position, team, facing = "front",
+    active = True, moved = False, attacked = False, sprinted = False, overcharged = False):
         self.__name = name
         self.__points = points
         self.__type = type
@@ -16,12 +17,12 @@ class Machine():
         self.__armor = armor
         self.__weak_spots = weak_spots
         self.__ability = ability
-        self.__facing = "front"
-        self.__active = True
-        self.__moved = False
-        self.__attacked = False
-        self.__sprinted = False
-        self.__overcharged = False
+        self.__facing = facing
+        self.__active = active
+        self.__moved = moved
+        self.__attacked = attacked
+        self.__sprinted = sprinted
+        self.__overcharged = overcharged
         self.__tile_position = tile_position
         self.__team = team
 

@@ -1,9 +1,10 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, session
 from json import loads
 from flask_cors import CORS
 import sys
 from APImysteries import mysteries
 import DomainModels
+import DomainPlayModels
 
 domain_path = mysteries.get('PATH_TO_DOMAIN')
 
@@ -12,6 +13,7 @@ import DomainModels
 
 app = Flask(__name__)
 CORS(app)
+app.secret_key = "machine"
 
 @app.route("/", methods = ["POST", "GET"])
 def index():
@@ -32,14 +34,24 @@ def start_game():
 
     playboard = DomainModels.initiate_board(players, machines, tiles)
     jsonified_playboard = DomainModels.encode_board(playboard)
+    #session["playboard"] = jsonified_playboard
 
     return jsonify({"board": jsonified_playboard})
 
 @app.route("/playgame", methods = ["POST"])
 def play_game():
+    # if "playboard" in session:
+    #     playboard = session["playboard"]
+    #     print(playboard)
     data = request.get_json()
     board = data["board"]
-    return jsonify(board)
+    machine = data["machine"]
+    facing = data["facing"]
+    tile_destination = data["tile"]
+
+    new_board = DomainPlayModels.play_machine(board, machine, facing, tile_destination)
+    jsonified_playboard = DomainModels.encode_board(new_board)
+    return jsonify({"board": jsonified_playboard})
 
 if __name__ == "__main__":
-    app.run(debug = True, port=4000)
+    app.run(debug = True, port = 4000)

@@ -1,14 +1,17 @@
+from mimetypes import init
 from Player import Player
 from Machine import Machine
 from Tile import Tile
 
 class Board():
-    def __init__(self, players, machines, tiles):
+    def __init__(self, players, machines, tiles, initialize_tiles = True):
         self.__players = players
         self.__machines = machines
         self.__tiles = tiles
-        for machine in machines:
-            self.__tiles[machine.get_tile_position()].set_occupied(True)
+        self.initialize_tiles = initialize_tiles
+        if (initialize_tiles):
+            for machine in machines:
+                self.__tiles[machine.get_tile_position()].set_occupied(True)
 
     def get_players(self):
         return self.__players
@@ -44,9 +47,8 @@ class Board():
                                     machine.set_tile_position(tile_destination)
                                     self.get_tiles()[tile_destination].set_occupied(True)
                                     machine.set_moved(True)
-                return "correct machinelist"
             else:
-                return "machine not from this player"
+                pass
         elif self.get_players()[1].get_has_turn():
             if machine in self.get_players()[1].get_machines():
                 if not machine.get_overcharged():
@@ -70,6 +72,5 @@ class Board():
                                     machine.set_tile_position(tile_destination)
                                     self.get_tiles()[tile_destination].set_occupied(True)
                                     machine.set_moved(True)
-                return "correct machinelist"
             else:
-                return "machine not from this player"
+                pass

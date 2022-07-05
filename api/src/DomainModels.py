@@ -67,7 +67,9 @@ def encode_machine(machine):
         "moved": machine.get_moved(), "attacked": machine.get_attacked(),\
         "sprinted": machine.get_sprinted(), "overcharged": machine.get_overcharged(),\
         "tile_position": machine.get_tile_position(), "team": machine.get_team()}
-    raise TypeError(f"Object {machine} is not of type Machine.")
+    else:
+        return machine
+    #raise TypeError(f"Object {machine} is not of type Machine.")
 
 def encode_machines(machines):
     jsonified_machines = []
@@ -97,10 +99,17 @@ def initiate_players(player1, player2, machines):
         players.append(Player(player["name"], player["has_turn"], player["machines"]))
     return players
 
+# def encode_player(player):
+#     if isinstance(player, Player):
+#         return {"name": player.get_name(), "has_turn": player.get_has_turn(),\
+#         "machines": player.get_machines(), "two_machines_were_played": player.get_two_machines_were_played(),\
+#         "victorypoints": player.get_victorypoints(), "won": player.get_won()}
+#     raise TypeError(f"Object {player} is not of type Player.")
+
 def encode_player(player):
     if isinstance(player, Player):
         return {"name": player.get_name(), "has_turn": player.get_has_turn(),\
-        "machines": player.get_machines(), "two_machines_were_played": player.get_two_machines_were_played(),\
+        "machines": list(map(encode_machine, player.get_machines())), "two_machines_were_played": player.get_two_machines_were_played(),\
         "victorypoints": player.get_victorypoints(), "won": player.get_won()}
     raise TypeError(f"Object {player} is not of type Player.")
 
