@@ -45,9 +45,12 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
     }
 
     async function tryPlayGame(tileIndex, machine) {
+        let correctMachine
+        removeRotation(machinesp1)
+        removeRotation(machinesp2)
         for (let i = 0; i < gameState.board.machines.length; i++) {
             if (machine.tile_position === gameState.board.machines[i].tile_position) {
-                machine = gameState.board.machines[i]
+                correctMachine = gameState.board.machines[i]
                 break;
             }
         }
@@ -58,7 +61,7 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({"board": gameState.board, "machine": machine, "facing": machine.facing, "tile": tileIndex})
+                body: JSON.stringify({"board": gameState.board, "machine": correctMachine, "facing": machine.facing, "tile": tileIndex})
             })
             if (response.ok) {
                 const newBoard = await response.json();
@@ -78,6 +81,14 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
             } 
         } catch (error) {
             console.log(error)
+        }
+    }
+
+    const removeRotation = (machines) => {
+        for (let i = 0; i < machines.length; i++) {
+            if (machines[i].rotation) {
+                delete machines[i].rotation
+            }
         }
     }
 
@@ -171,7 +182,7 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
                         break;
                     }
                     currentTile.appendChild(machinePiece);
-                    e.target.focus()
+                    e.target.focus();
                     break;
                 case "ArrowDown":
                     integerId += 8
@@ -183,7 +194,7 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
                         break;
                     }
                     currentTile.appendChild(machinePiece);
-                    e.target.focus()
+                    e.target.focus();
                     break;
                 case "ArrowLeft":
                     integerId -= 1;
@@ -198,15 +209,15 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
                         break;
                     }
                     currentTile.appendChild(machinePiece);
-                    e.target.focus()
+                    e.target.focus();
                     break;
                 case "Enter":
-                    e.target.blur()
+                    e.target.blur();
                     tryPlayGame(integerId, machine)
                     break;
                 case " ":
-                    rotatePiece(machinePiece)
-                    e.target.focus()
+                    rotatePiece(machinePiece, machine)
+                    e.target.focus();
                     break;
                 default:
                     break;
@@ -214,15 +225,24 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
         }
     }
 
-    const rotatePiece = (machine) => {
+    const rotatePiece = (machinePiece, machine) => {
         if (!machine.rotation) {
             machine.rotation = 0
         }
-        machine.rotation += 90
-        if (machine.rotation === 360) {
+        if (machine.facing === "front") {
+            machine.facing = "right"
+            machine.rotation = 90
+        } else if (machine.facing === "right") {
+            machine.facing = "back"
+            machine.rotation = 180
+        } else if (machine.facing === "back") {
+            machine.facing = "left"
+            machine.rotation = 270
+        } else if (machine.facing === "left") {
+            machine.facing = "front"
             machine.rotation = 0
         }
-        machine.style.transform = `rotate(${machine.rotation}deg)`;
+        machinePiece.style.transform = `rotate(${machine.rotation}deg)`;
     }
 
     const dragStart = (e) => {
