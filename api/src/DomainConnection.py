@@ -53,5 +53,14 @@ def play_game():
     jsonified_playboard = DomainModels.encode_board(new_board)
     return jsonify({"board": jsonified_playboard})
 
+@app.route("/endturn", methods = ["POST"])
+def end_turn():
+    data = request.get_json()
+    board = data["board"]
+
+    new_board = DomainPlayModels.end_turn(board)
+    jsonified_playboard = DomainModels.encode_board(new_board)
+    return jsonify({"board": jsonified_playboard})
+
 if __name__ == "__main__":
     app.run(debug = True, port = 4000)

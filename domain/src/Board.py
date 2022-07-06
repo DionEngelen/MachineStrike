@@ -25,9 +25,9 @@ class Board():
 
     def perform_move(self, machine, facing, tile_destination):
         if self.get_players()[0].get_has_turn():
-            if machine in self.get_players()[0].get_machines():
-                if not machine.get_overcharged():
-                    machine.overcharge()
+            if not self.get_players()[0].get_two_machines_were_played()\
+            or (machine.get_moved() or machine.get_attacked or machine.get_sprinted()):
+                if machine in self.get_players()[0].get_machines():
                     if facing != machine.get_facing():
                         machine.turn(facing)
                     if not self.get_tiles()[tile_destination].get_occupied():
@@ -39,20 +39,21 @@ class Board():
                                 machine.set_movement_range(machine.get_marsh_movement_range())
                             if not tile_destination == machine.get_tile_position():
                                 if machine.check_valid_move(tile_destination):
-                                    self.get_tiles()[machine.get_tile_position()].set_occupied(False)
-                                    if self.get_tiles()[machine.get_tile_position()].get_landscape() == "marsh"\
-                                    and not machine.get_type() == "Pull"\
-                                    and not self.get_tiles()[tile_destination] == "marsh":
-                                        machine.set_movement_range(machine.get_regular_movement_range())
-                                    machine.set_tile_position(tile_destination)
-                                    self.get_tiles()[tile_destination].set_occupied(True)
-                                    machine.set_moved(True)
-            else:
-                pass
+                                    if not machine.get_overcharged():
+                                        machine.overcharge()
+                                        self.get_tiles()[machine.get_tile_position()].set_occupied(False)
+                                        if self.get_tiles()[machine.get_tile_position()].get_landscape() == "marsh"\
+                                        and not machine.get_type() == "Pull"\
+                                        and not self.get_tiles()[tile_destination] == "marsh":
+                                            machine.set_movement_range(machine.get_regular_movement_range())
+                                        machine.set_tile_position(tile_destination)
+                                        self.get_tiles()[tile_destination].set_occupied(True)
+                                        machine.set_moved(True)
+                                        self.get_players()[0].check_end_turn()
         elif self.get_players()[1].get_has_turn():
-            if machine in self.get_players()[1].get_machines():
-                if not machine.get_overcharged():
-                    machine.overcharge()
+            if not self.get_players()[1].get_two_machines_were_played()\
+            or (machine.get_moved() or machine.get_attacked or machine.get_sprinted()):
+                if machine in self.get_players()[1].get_machines():
                     if facing != machine.get_facing():
                         machine.turn(facing)
                     if self.get_tiles()[machine.get_tile_position()].get_landscape() == "marsh"\
@@ -64,13 +65,22 @@ class Board():
                         or machine.get_type() == "Swoop":
                             if not tile_destination == machine.get_tile_position():
                                 if machine.check_valid_move(tile_destination):
-                                    self.get_tiles()[machine.get_tile_position()].set_occupied(False)
-                                    if self.get_tiles()[machine.get_tile_position()].get_landscape() == "marsh"\
-                                    and not machine.get_type() == "Pull"\
-                                    and not self.get_tiles()[tile_destination] == "marsh":
-                                        machine.set_movement_range(machine.get_regular_movement_range())
-                                    machine.set_tile_position(tile_destination)
-                                    self.get_tiles()[tile_destination].set_occupied(True)
-                                    machine.set_moved(True)
-            else:
-                pass
+                                    if not machine.get_overcharged():
+                                        machine.overcharge()
+                                        self.get_tiles()[machine.get_tile_position()].set_occupied(False)
+                                        if self.get_tiles()[machine.get_tile_position()].get_landscape() == "marsh"\
+                                        and not machine.get_type() == "Pull"\
+                                        and not self.get_tiles()[tile_destination] == "marsh":
+                                            machine.set_movement_range(machine.get_regular_movement_range())
+                                        machine.set_tile_position(tile_destination)
+                                        self.get_tiles()[tile_destination].set_occupied(True)
+                                        machine.set_moved(True)
+                                        self.get_players()[1].check_end_turn()
+
+    def end_turn(self):
+        if self.get_players()[0].get_has_turn():
+            self.get_players()[0].switch_turn(self.get_players()[1])
+            self.get_players()[0].set_two_machines_were_played(False)
+        elif self.get_players()[1].get_has_turn():
+            self.get_players()[1].switch_turn(self.get_players()[0])
+            self.get_players()[1].set_two_machines_were_played(False)

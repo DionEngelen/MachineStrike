@@ -27,6 +27,17 @@ def play_machine(board, machine, facing, tile_destination):
     board.perform_move(machine_object, facing, tile_destination)
     return board
 
+def end_turn(board):
+    machines = list(map(make_machine, board["machines"]))
+    board["players"][0]["machines"] = list(filter(lambda m: m.get_team() == "player1", machines))
+    board["players"][1]["machines"] = list(filter(lambda m: m.get_team() == "player2", machines))
+    players = list(map(make_player, board["players"]))
+    tiles = list(map(make_tile, board["tiles"]))
+    board = Board(players, machines, tiles, False)
+
+    board.end_turn()
+    return board
+
 def make_machine(machine_dict):
     return Machine(**machine_dict)
 

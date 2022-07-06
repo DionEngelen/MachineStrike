@@ -46,15 +46,15 @@ class TestBoard(unittest.TestCase):
         self.assertEqual("clawstrider", self.board.get_players()[0].get_machines()[1].get_name())
         self.assertEqual("clawstrider", self.board.get_machines()[1].get_name())
 
-    def test_perform_move_for_which_player(self):
-        self.assertEqual("correct machinelist", self.board.perform_move(self.board.get_machines()[0], "front", 0))
-        self.board.get_players()[0].set_has_turn(False)
-        self.board.get_players()[1].set_has_turn(True)
-        self.assertEqual("machine not from this player", self.board.perform_move(self.board.get_machines()[0], "front", 1))
+    # def test_perform_move_for_which_player(self):
+    #     self.assertEqual("correct machinelist", self.board.perform_move(self.board.get_machines()[0], "front", 0))
+    #     self.board.get_players()[0].set_has_turn(False)
+    #     self.board.get_players()[1].set_has_turn(True)
+    #     self.assertEqual("machine not from this player", self.board.perform_move(self.board.get_machines()[0], "front", 1))
 
-    def test_if_correct_machine_of_corresponding_player_moves(self):
-        self.assertEqual("machine not from this player", self.board.perform_move(self.board.get_machines()[2], "front", 1))
-        self.assertEqual("correct machinelist", self.board.perform_move(self.board.get_machines()[0], "front", 0))
+    # def test_if_correct_machine_of_corresponding_player_moves(self):
+    #     self.assertEqual("machine not from this player", self.board.perform_move(self.board.get_machines()[2], "front", 1))
+    #     self.assertEqual("correct machinelist", self.board.perform_move(self.board.get_machines()[0], "front", 0))
 
     def test_if_machine_turns_when_facing_changes(self):
         self.board.perform_move(self.board.get_machines()[0], "left", 1)

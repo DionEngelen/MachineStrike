@@ -54,9 +54,5 @@ class TestMachine(unittest.TestCase):
         self.assertEqual(2, self.grazer.get_health())
         self.assertEqual(True, self.grazer.get_overcharged())
 
-    # def test_tile_gets_occupied(self):
-    #     self.tiles[self.clawstrider.get_tile_position()].set_occupied(True)
-    #     self.assertEqual(True, self.tiles[self.clawstrider.get_tile_position()].get_occupied())
-
 if __name__ == "__main__":
     unittest.main()

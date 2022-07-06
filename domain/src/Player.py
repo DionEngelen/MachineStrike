@@ -35,3 +35,22 @@ class Player():
         self.__victorypoints = victorypoints
     def set_won(self, won):
         self.__won = won
+
+    def check_end_turn(self):
+        machines_played = 0
+        for machine in self.get_machines():
+            if machine.get_moved() or machine.get_attacked() or machine.get_sprinted():
+                machines_played += 1
+        if machines_played >= 2:
+            self.set_two_machines_were_played(True)
+
+    def switch_turn(self, other_player):
+        if self.get_has_turn() and self.get_two_machines_were_played():
+            self.set_has_turn(False)
+            other_player.set_has_turn(True)
+            self.set_two_machines_were_played(False)
+            for machine in self.get_machines():
+                machine.set_moved(False)
+                machine.set_attacked(False)
+                machine.set_sprinted(False)
+                machine.set_overcharged(False)

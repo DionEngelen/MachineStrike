@@ -53,7 +53,7 @@
     background-color: forestgreen;
 }
 .chasm {
-    background-color: rgb(226, 33, 33);
+    background-color: brown;
 }
 
 .p1-info, .p2-info {
@@ -78,10 +78,10 @@
 
 .machine-piece {
     font-size: x-small;
-    width: 58px;
-    height: 58px;
-    border: 1px solid black;
-    border-radius: 10%;
+    width: 54px;
+    height: 54px;
+    border: 3px solid black;
+    border-radius: 80% 80% 10% 10%;
 }
 
 .player1machine {

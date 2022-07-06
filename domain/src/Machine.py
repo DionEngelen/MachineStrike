@@ -1,4 +1,5 @@
 from shutil import move
+from Tile import Tile
 
 
 class Machine():

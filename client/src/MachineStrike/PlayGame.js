@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { hiddenStartGameKey, hiddenPlayGameKey } from "./hiddenkeys";
+import { hiddenStartGameKey, hiddenPlayGameKey, hiddenEndTurnKey } from "./hiddenkeys";
 import "./PlayGame.css";
 
 export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMachinesp1, setMachinesp2}) {
@@ -81,6 +81,43 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
         }
     }
 
+    async function tryEndTurn() {
+        let player
+        for (let i = 0; i < gameState.board.players.length; i++) {
+            if (gameState.board.players[i].has_turn) {
+                player = gameState.board.players[i]
+                break;
+            }
+        }
+        try {
+            const response = await fetch(hiddenEndTurnKey(), {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({"board": gameState.board, "player": player})
+            })
+            if (response.ok) {
+                const newBoard = await response.json();
+                console.log(newBoard);
+                setGameState(newBoard);
+                const playedMachinesp1 = []
+                const playedMachinesp2 = []
+                for (let i = 0; i < newBoard.board.machines.length; i++) {
+                    if (newBoard.board.machines[i].team === "player1") {
+                        playedMachinesp1.push(newBoard.board.machines[i])
+                    } else {
+                        playedMachinesp2.push(newBoard.board.machines[i])
+                    }
+                }
+                setMachinesp1(playedMachinesp1)
+                setMachinesp2(playedMachinesp2)
+            } 
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
 
 
@@ -167,20 +204,25 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
                     e.target.blur()
                     tryPlayGame(integerId, machine)
                     break;
+                case " ":
+                    rotatePiece(machinePiece)
+                    e.target.focus()
+                    break;
                 default:
                     break;
             }  
         }
     }
 
-    const endTurn = () => {
-        if (gameState.board.players[0].has_turn) {
-            gameState.board.players[0].has_turn = false;
-            gameState.board.players[1].has_turn = true;
-        } else {
-            gameState.board.players[0].has_turn = true;
-            gameState.board.players[1].has_turn = false;
+    const rotatePiece = (machine) => {
+        if (!machine.rotation) {
+            machine.rotation = 0
         }
+        machine.rotation += 90
+        if (machine.rotation === 360) {
+            machine.rotation = 0
+        }
+        machine.style.transform = `rotate(${machine.rotation}deg)`;
     }
 
     const dragStart = (e) => {
@@ -233,7 +275,6 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
 
     const showMovementPreview = (e, machine) => {
         if (gameState) {
-            const integerId = parseInt(e.target.parentElement.id)
             for (let i = 1; i <= machine.movement_range; i++) {
                 previewMovement1(machine.tile_position, i, machine.tile_position, machine);
                 if (i > 1) {
@@ -385,7 +426,6 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
 
     const clearMovementPreview = (e, machine) => {
         if (gameState) {
-            const integerId = parseInt(e.target.parentElement.id);
             for (let i = 1; i <= machine.movement_range; i++) {
                 clearMovement1(machine.tile_position, i, machine.tile_position, machine);
                 if (i > 1) {
@@ -514,6 +554,33 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
         }
     }
 
+    const colorBorders = (machine) => {
+        let style = {
+            borderTopColor: "black",
+            borderLeftColor: "black",
+            borderRightColor: "black",
+            borderBottomColor: "black"
+        } 
+        if (machine.armor.includes("front")) {
+            style.borderTopColor = "blue"
+        } if (machine.armor.includes("left")) {
+            style.borderLeftColor = "blue"
+        } if (machine.armor.includes("right")){
+            style.borderRightColor = "blue"
+        } if (machine.armor.includes("back")) {
+            style.borderBottomColor = "blue"
+        } if (machine.weak_spots.includes("front")) {
+            style.borderTopColor = "red"
+        } if (machine.weak_spots.includes("left")) {
+            style.borderLeftColor = "red"
+        } if (machine.weak_spots.includes("right")){
+            style.borderRightColor = "red"
+        } if (machine.weak_spots.includes("back")) {
+            style.borderBottomColor = "red"
+        }
+        return style
+    }
+
     return (
         <div className="game">
             <div className="p1-info">
@@ -525,6 +592,7 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
                         <div
                         key={index}
                         id={"p1machine" + index}
+                        style={colorBorders(machine)}
                         onFocus={(e) => showMovementPreview(e, machine)}
                         onBlur={(e) => clearMovementPreview(e, machine)}
                         className="player1machine machine-piece"
@@ -538,7 +606,7 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
                         onDragLeave={(e)=> e.preventDefault()}
                         onDragEnd={(e) => dragEnd(e, machine)}
                         >
-                            {machine.name}<br/><br/><br/>Atk:{machine.attack} Hp:{machine.health}
+                            <br/>{machine.name}<br/><br/>Atk:{machine.attack} Hp:{machine.health}
                         </div>
                 ))}
                 </div>
@@ -558,8 +626,8 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
                 {checkIfAllMachinesHaveTilePositions() && <button id="start-button"
                 onClick={() => trySetBoard()}>Start game</button>}
                 {gameState && <button className="end-turn-button"
-                onClick={() => endTurn()}
-                disabled={!gameState.board.players[0].two_machines_were_played ||
+                onClick={() => tryEndTurn()}
+                disabled={!gameState.board.players[0].two_machines_were_played &&
                 !gameState.board.players[1].two_machines_were_played}
                 >End turn</button>}
             </div>
@@ -572,6 +640,7 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
                     <div
                     key={index}
                     id={"p2machine" + index}
+                    style={colorBorders(machine)}
                     onFocus={(e) => showMovementPreview(e, machine)}
                     onBlur={(e) => clearMovementPreview(e, machine)}
                     className="player2machine machine-piece"
@@ -583,7 +652,7 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
                     onDragEnter={(e)=> e.preventDefault()}
                     onDragLeave={(e)=> e.preventDefault()}
                     onDragEnd={(e) => dragEnd(e, machine)}>
-                        {machine.name}<br/><br/><br/>Atk:{machine.attack} Hp:{machine.health}
+                        <br/>{machine.name}<br/><br/>Atk:{machine.attack} Hp:{machine.health}
                     </div>
                 ))}
                 </div>

@@ -33,5 +33,32 @@ class TestPlayer(unittest.TestCase):
         self.player1.get_machines()[1].turn("back")
         self.assertEqual("back", self.player1.get_machines()[1].get_facing())
 
+    def test_switch_turn(self):
+        self.player1.switch_turn(self.player2)
+        self.assertEqual(True, self.player1.get_has_turn())
+        self.assertEqual(False, self.player2.get_has_turn())
+
+        self.player1.set_two_machines_were_played(True)
+        self.player1.switch_turn(self.player2)
+        self.assertEqual(False, self.player1.get_has_turn())
+        self.assertEqual(True, self.player2.get_has_turn())
+
+        self.player2.switch_turn(self.player1)
+        self.assertEqual(True, self.player2.get_has_turn())
+        self.assertEqual(False, self.player1.get_has_turn())
+
+        self.player2.set_two_machines_were_played(True)
+        self.player2.switch_turn(self.player1)
+        self.assertEqual(False, self.player2.get_has_turn())
+        self.assertEqual(True, self.player1.get_has_turn())
+
+    def test_check_end_turn(self):
+        self.player1.get_machines()[0].set_moved(True)
+        self.player1.check_end_turn()
+        self.assertEqual(False, self.player1.get_two_machines_were_played())
+        self.player1.get_machines()[1].set_moved(True)
+        self.player1.check_end_turn()
+        self.assertEqual(True, self.player1.get_two_machines_were_played())
+
 if __name__ == "__main__":
     unittest.main()
