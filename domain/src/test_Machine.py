@@ -54,24 +54,24 @@ class TestMachine(unittest.TestCase):
         self.assertEqual(2, self.grazer.get_health())
         self.assertEqual(True, self.grazer.get_overcharged())
     
-    def test_armor_and_weak_spot_rotation(self):
-        self.grazer.rotate_armor_and_weak_spots("back")
-        self.assertEqual("back", self.grazer.get_armor()[0])
-        self.assertEqual("right", self.grazer.get_weak_spots()[0])
-        self.grazer.turn("back")
+    # def test_armor_and_weak_spot_rotation(self):
+    #     self.grazer.rotate_armor_and_weak_spots("back")
+    #     self.assertEqual("back", self.grazer.get_armor()[0])
+    #     self.assertEqual("right", self.grazer.get_weak_spots()[0])
+    #     self.grazer.turn("back")
 
-        self.grazer.rotate_armor_and_weak_spots("left")
-        self.assertEqual("left", self.grazer.get_armor()[0])
-        self.assertEqual(["back" ,"front"], self.grazer.get_weak_spots())
-        self.grazer.turn("left")
+    #     self.grazer.rotate_armor_and_weak_spots("left")
+    #     self.assertEqual("left", self.grazer.get_armor()[0])
+    #     self.assertEqual(["back" ,"front"], self.grazer.get_weak_spots())
+    #     self.grazer.turn("left")
         
-        self.grazer.rotate_armor_and_weak_spots("front")
-        self.assertEqual("front", self.grazer.get_armor()[0])
-        self.assertEqual(["left", "right"], self.grazer.get_weak_spots())
+    #     self.grazer.rotate_armor_and_weak_spots("front")
+    #     self.assertEqual("front", self.grazer.get_armor()[0])
+    #     self.assertEqual(["left", "right"], self.grazer.get_weak_spots())
 
-        self.clawstrider.rotate_armor_and_weak_spots("left")
-        self.assertEqual(["left"], self.clawstrider.get_armor())
-        self.assertEqual(["right"], self.clawstrider.get_weak_spots())
+    #     self.clawstrider.rotate_armor_and_weak_spots("left")
+    #     self.assertEqual(["left"], self.clawstrider.get_armor())
+    #     self.assertEqual(["right"], self.clawstrider.get_weak_spots())
 
 if __name__ == "__main__":
     unittest.main()

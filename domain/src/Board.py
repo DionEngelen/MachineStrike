@@ -20,9 +20,6 @@ class Board():
     def get_tiles(self):
         return self.__tiles
 
-    def remove_machine(self, machine):
-        self.__machines.pop(machine)
-
     def perform_move(self, machine, facing, tile_destination):
         if self.get_players()[0].get_has_turn():
             if not self.get_players()[0].get_two_machines_were_played()\
