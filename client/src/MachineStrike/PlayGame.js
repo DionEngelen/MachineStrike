@@ -46,6 +46,16 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
 
     async function tryPlayGame(tileIndex, machine) {
         let correctMachine
+        let newFacing = machine.facing
+        if (machine.rotation === 0) {
+            newFacing = "front"
+        } else if (machine.rotation === 90){
+            newFacing = "right"
+        } else if (machine.rotation === 180) {
+            newFacing = "back"
+        } else if (machine.rotation === 270) {
+            newFacing = "left"
+        }
         removeRotation(machinesp1)
         removeRotation(machinesp2)
         for (let i = 0; i < gameState.board.machines.length; i++) {
@@ -54,6 +64,8 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
                 break;
             }
         }
+        console.log(correctMachine.facing)
+        console.log(newFacing)
         try {
             const response = await fetch(hiddenPlayGameKey(), {
                 method: 'POST',
@@ -61,7 +73,7 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({"board": gameState.board, "machine": correctMachine, "facing": machine.facing, "tile": tileIndex})
+                body: JSON.stringify({"board": gameState.board, "machine": correctMachine, "facing": newFacing, "tile": tileIndex})
             })
             if (response.ok) {
                 const newBoard = await response.json();
@@ -227,19 +239,23 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
 
     const rotatePiece = (machinePiece, machine) => {
         if (!machine.rotation) {
-            machine.rotation = 0
+            if (machine.facing === "front") {
+                machine.rotation = 0
+            } else if (machine.facing === "right") {
+                machine.rotation = 90
+            } else if (machine.facing === "back") {
+                machine.rotation = 180
+            } else if (machine.facing === "left") {
+                machine.rotation = 270
+            }
         }
-        if (machine.facing === "front") {
-            machine.facing = "right"
+        if (machine.rotation === 0) {
             machine.rotation = 90
-        } else if (machine.facing === "right") {
-            machine.facing = "back"
+        } else if (machine.rotation === 90) {
             machine.rotation = 180
-        } else if (machine.facing === "back") {
-            machine.facing = "left"
+        } else if (machine.rotation === 180) {
             machine.rotation = 270
-        } else if (machine.facing === "left") {
-            machine.facing = "front"
+        } else if (machine.rotation === 270) {
             machine.rotation = 0
         }
         machinePiece.style.transform = `rotate(${machine.rotation}deg)`;

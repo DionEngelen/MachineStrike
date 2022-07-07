@@ -22,7 +22,7 @@ def play_machine(board, machine, facing, tile_destination):
     machine_object = make_machine(machine)
     for correct_machine in machines:
         if correct_machine.get_tile_position() == machine_object.get_tile_position():
-            machine_object = correct_machine 
+            machine_object = correct_machine
 
     board.perform_move(machine_object, facing, tile_destination)
     return board

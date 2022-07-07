@@ -6,7 +6,7 @@ from Melee import Melee
 class TestMelee(unittest.TestCase):
     def setUp(self):
         self.grazer = Machine("grazer", 1, "Ram", 4, 1, 1, 2, ["front"], ["left", "right"], "gallop", 0, "player1")
-        self.clawstrider = Melee("clawstrider", 3, "Melee", 8, 3, 2, 3, ["front"], ["back"], "", 1, "player1")
+        self.clawstrider = Machine("clawstrider", 3, "Melee", 8, 3, 2, 3, ["front"], ["back"], "", 1, "player1")
 
     def tearDown(self):
         pass
@@ -20,7 +20,7 @@ class TestMelee(unittest.TestCase):
         self.clawstrider.attack(self.grazer)
         self.assertEqual(1, self.grazer.get_health())
 
-        self.clawstrider.turn("down")
+        self.clawstrider.turn("back")
         self.clawstrider.attack(self.grazer)
         self.assertEqual(1, self.grazer.get_health())
 

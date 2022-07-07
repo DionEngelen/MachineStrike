@@ -1,5 +1,7 @@
+from abc import abstractmethod
 from shutil import move
 from Tile import Tile
+#from Melee import Melee
 
 
 class Machine():
@@ -74,6 +76,12 @@ class Machine():
         self.__attack = attack
     def set_movement_range(self, movement_range):
         self.__movement_range = movement_range
+    def set_armor(self, armor):
+        for spot in range(len(armor)):
+            self.__armor[spot] = armor[spot]
+    def set_weak_spots(self, weak_spots):
+        for spot in range(len(weak_spots)):
+            self.__weak_spots[spot] = weak_spots[spot]
     def set_facing(self, facing):
         self.__facing = facing
     def set_active(self, active):
@@ -93,6 +101,22 @@ class Machine():
         if self.get_active():
             if facing != self.get_facing():
                 self.set_facing(facing)
+
+    # def rotate_armor_and_weak_spots(self, facing):
+    #     facings = ["front", "right", "back", "left"]
+    #     new_facing_index = facings.index(facing) - facings.index(self.get_facing())
+
+    #     new_armor = []
+    #     for armor in range(len(self.get_armor())):
+    #         new_armor_index = (facings.index(self.get_armor()[armor]) + new_facing_index) % 4
+    #         new_armor.append(facings[new_armor_index])
+    #     self.set_armor(new_armor)
+
+    #     new_weak_spots = []
+    #     for weak_spot in range(len(self.get_weak_spots())):
+    #         new_weak_spot_index = (facings.index(self.get_weak_spots()[weak_spot]) + new_facing_index) % 4
+    #         new_weak_spots.append(facings[new_weak_spot_index])
+    #     self.set_weak_spots(new_weak_spots)
 
     def check_valid_move(self, tile_destination):
         valid_positions = []
@@ -208,3 +232,10 @@ class Machine():
             if self.get_health() > 1 and (self.get_attacked() or self.get_moved() or self.get_sprinted()):
                 self.set_overcharged(True)
                 self.set_health(self.get_health() - 2)
+
+    # @abstractmethod
+    # def attack(self, other_machine):
+    #     raise NotImplementedError("Must override attack")
+
+    def check_facing_of_attack(self, enemy_facing):
+        facings = ["front", "right", "back", "left"]
