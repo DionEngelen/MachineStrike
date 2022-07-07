@@ -98,9 +98,7 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
 
     const removeRotation = (machines) => {
         for (let i = 0; i < machines.length; i++) {
-            if (machines[i].rotation) {
-                delete machines[i].rotation
-            }
+            delete machines[i].rotation
         }
     }
 
