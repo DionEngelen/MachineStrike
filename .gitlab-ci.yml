@@ -12,6 +12,9 @@ stages:
 test-job:
     stage: test
     script:
+        - pwd 
         - cd domain/src
+        - pwd
+        - ls
         - python -m coverage run test_Board.py
         - python -m coverage report
