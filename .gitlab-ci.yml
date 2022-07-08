@@ -1,11 +1,11 @@
 stages:
-    - build
+    # - build
     - test
 
-build-job:
-    stage: build
-    script:
-        - npm run build
+# build-job:
+#     stage: build
+#     script:
+#         - npm run build
 
 test-job:
     stage: test
