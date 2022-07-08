@@ -10,5 +10,5 @@ stages:
 test-job:
     stage: test
     script:
-        - python -m coverage run test_Board.py
-        - python -m coverage report
+        - domain/src/python -m coverage run test_Board.py
+        - domain/src/python -m coverage report
