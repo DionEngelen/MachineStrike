@@ -12,6 +12,7 @@ stages:
 test-job:
     stage: test
     script:
+        - pip3 install coverage
         - pwd 
         - cd domain/src
         - pwd
