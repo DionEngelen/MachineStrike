@@ -2,6 +2,8 @@
     display: grid;
     grid-template: 1fr / 20% 45% 35%;
     place-items: center;
+    background-image: linear-gradient(to right,darkblue, skyblue 18%, skyblue 82%, darkblue);
+    padding-bottom: 25px;
 }
 
 .machine-pieces {

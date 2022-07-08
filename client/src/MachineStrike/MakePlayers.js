@@ -30,7 +30,7 @@ export function MakePlayers({makeplayer1, makeplayer2}) {
     }
 
     return ( 
-        <div> 
+        <div className="playerinitiation"> 
             <form onSubmit={(e) => confirmPlayers(e)}>
                 <input value={playerOne}
                     placeholder="Player 1 name"

@@ -2,6 +2,8 @@
     display: grid;
     grid-template-columns: 20% 1fr 20%;
     place-items: center;
+    background-image: linear-gradient(to right,darkblue, skyblue 18%, skyblue 82%, darkblue);
+    padding-bottom: 70px;
 }
 
 .gameboard{
@@ -65,7 +67,8 @@
     margin-right: -50px;
 }
 .p2-info {
-    margin-left: -100px;
+    margin-bottom: -7px;
+    margin-left: -350px;
 }
 
 .p1-machinepieces, .p2-machinepieces {
@@ -91,9 +94,60 @@
     background-color: rgb(220, 149, 17);
 }
 
-/* .show-machine {
-    width: 50px;
-    height: 50px;
-    background-color: red;
-    place-self: center;
-} */
+.show-piecesgame {
+    margin-top: -100px;
+}
+
+.show-piecesgame div {
+    display: grid;
+    grid-template: 25px 265px 60px/ 134px;
+    margin-left: 80px;
+}
+
+.name-and-pointsgame {
+    grid-template-columns: 100px 100px;
+    margin-top: -50px;
+    margin-left: -22px;
+}
+
+.shown-machinegame {
+    width: 200px;
+    height: 270px;
+    margin-left: -57px;
+}
+
+.statsgame {
+    grid-template-columns: 100px 100px;
+    margin-left: -50px;
+    align-content: start;
+    justify-content: center;
+}
+
+.statsgame p {
+    border: 1px solid black;
+    border-radius: 10px;
+    background-color: bisque;
+}
+
+.attackgame, .healthgame {
+    width: 130px;
+    height: 30px;
+}
+
+.attackrangegame, .moverangegame {
+    width: 130px;
+    height: 30px;
+    margin-top: 25px;
+}
+
+.armorgame, .weak-spotsgame {
+    width: 130px;
+    height: 60px;
+    margin-top: -207px;
+}
+
+.abilitygame {
+    grid-column: span 2;
+    margin-top: -203.5px;
+    margin-bottom: 185px;
+}

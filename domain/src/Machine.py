@@ -1,5 +1,6 @@
 from shutil import move
 from Tile import Tile
+#from Melee import Melee
 
 class Machine():
     def __init__(self, name, points, type, health, attack, attack_range,
@@ -25,6 +26,14 @@ class Machine():
         self.__overcharged = overcharged
         self.__tile_position = tile_position
         self.__team = team
+
+    # def MachineFactory(self, name, points, type, health, attack, attack_range,
+    # movement_range, armor, weak_spots, ability, tile_position, team, facing = "front",
+    # active = True, moved = False, attacked = False, sprinted = False, overcharged = False):
+    #     if type == "Melee":
+    #         return Melee(self, name, points, type, health, attack, attack_range,
+    #         movement_range, armor, weak_spots, ability, tile_position, team, facing = "front",
+    #         active = True, moved = False, attacked = False, sprinted = False, overcharged = False) 
 
     def get_name(self):
         return self.__name

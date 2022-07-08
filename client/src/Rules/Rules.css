@@ -2,6 +2,19 @@
     display: grid;
     grid-template: 1fr / 1fr;
     justify-content: center;
-    background-color: skyblue;
+    background-image: linear-gradient(to right,darkblue, skyblue 18%, skyblue 82%, darkblue);
     color: black;
+}
+
+h3 {
+    margin-bottom: -5px;
+}
+
+h2 {
+    margin-bottom: -5px;
+}
+
+ul {
+    text-align: left;
+    justify-self: center;
 }

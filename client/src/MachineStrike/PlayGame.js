@@ -1,14 +1,58 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { hiddenStartGameKey, hiddenPlayGameKey, hiddenEndTurnKey } from "./hiddenkeys";
 import "./PlayGame.css";
+import burrower from "../images/GameImages/Burrower.png";
+import grazer from "../images/GameImages/Grazer.png";
+import lancehorn from "../images/GameImages/Lancehorn.png";
+import charger from "../images/GameImages/Charger.png";
+import plowhorn from "../images/GameImages/Plowhorn.png";
+import longleg from "../images/GameImages/Longleg.png";
+import bristleback from "../images/GameImages/Bristleback.png";
+import scrapper from "../images/GameImages/Scrapper.png";
+import skydrifter from "../images/GameImages/Skydrifter.png";
+import bellowback from "../images/GameImages/Bellowback.png";
+import widemaw from "../images/GameImages/Widemaw.png";
+import snapmaw from "../images/GameImages/Snapmaw.png";
+import clawstrider from "../images/GameImages/Clawstrider.png";
+import sunwing from "../images/GameImages/Sunwing.png";
+import clamberjaw from "../images/GameImages/Clamberjaw.png";
+import ravager from "../images/GameImages/Ravager.png";
+import rollerback from "../images/GameImages/Rollerback.png";
+import dreadwing from "../images/GameImages/Dreadwing.png";
+import rockbreaker from "../images/GameImages/Rockbreaker.png";
+import thunderjaw from "../images/GameImages/Thunderjaw.png";
+import tideripper from "../images/GameImages/Tideripper.png";
+import fireclaw from "../images/GameImages/Fireclaw.png";
+import scorcher from "../images/GameImages/Scorcher.png";
+import slitherfang from "../images/GameImages/Slitherfang.png";
 
 export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMachinesp1, setMachinesp2}) {
+    const machineImages = [burrower, grazer, lancehorn, charger, plowhorn, longleg,
+    bristleback, scrapper, skydrifter, bellowback, widemaw, snapmaw,
+    clawstrider, sunwing, clamberjaw, ravager, rollerback, dreadwing,
+    rockbreaker, thunderjaw, tideripper, fireclaw, scorcher, slitherfang];
+
     let [tileBeingDraggedTo, setTileBeingDraggedTo] = useState();
+    const [playImages, setPlayImages] = useState([])
     const [gameState, setGameState] = useState();
     const [startButtonIsClicked, setStartButtonIsClicked] = useState(false);
-    //const [showMachineP1, setShowMachineP1] = useState(null);
-    //const [showMachineP2, setShowMachineP2] = useState(null);
+    const [showMachineP1, setShowMachineP1] = useState(null);
+    const [showMachineP2, setShowMachineP2] = useState(null);
+
+    const fillPlayImages = () => {
+        for (let i = 0; i < machinesp1.length; i++) {
+            playImages.push(machineImages[machinesp1[i].machine - 1])
+        }
+        for (let i = 0; i < machinesp2.length; i++) {
+            playImages.push(machineImages[machinesp2[i].machine - 1])
+        }
+        setPlayImages(playImages)
+    }
+
+    useEffect(() => {
+        fillPlayImages()
+    }, [])
 
     async function trySetBoard() {
         setStartButtonIsClicked(true);
@@ -64,8 +108,6 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
                 break;
             }
         }
-        console.log(correctMachine.facing)
-        console.log(newFacing)
         try {
             const response = await fetch(hiddenPlayGameKey(), {
                 method: 'POST',
@@ -169,11 +211,14 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
             switch(e.key) {
                 case "ArrowUp":
                     integerId -= 8;
+                    if ((!currentTile.firstChild && integerId !== machine.tile_position) || integerId < 0) {
+                        break;
+                    }
                     if (gameState.board.tiles[integerId].landscape === "chasm" && machine.type !== "Swoop") {
                         break;
                     }
                     currentTile = document.querySelector(`#${CSS.escape(integerId.toString())}`);
-                    if (currentTile.firstChild.id.includes("machine")) {
+                    if (currentTile.firstChild && currentTile.firstChild.id.includes("machine")) {
                         break;
                     }
                     currentTile.appendChild(machinePiece);
@@ -188,7 +233,10 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
                         break;
                     }
                     currentTile = document.querySelector(`#${CSS.escape(integerId.toString())}`);
-                    if (currentTile.firstChild.id.includes("machine")) {
+                    if (currentTile.firstChild && currentTile.firstChild.id.includes("machine")) {
+                        break;
+                    }
+                    if (!currentTile.firstChild && integerId !== machine.tile_position) {
                         break;
                     }
                     currentTile.appendChild(machinePiece);
@@ -196,11 +244,14 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
                     break;
                 case "ArrowDown":
                     integerId += 8
+                    if ((!currentTile.firstChild && integerId !== machine.tile_position) || integerId > 63) {
+                        break;
+                    }
                     if (gameState.board.tiles[integerId].landscape === "chasm" && machine.type !== "Swoop") {
                         break;
                     }
                     currentTile = document.querySelector(`#${CSS.escape(integerId.toString())}`);
-                    if (currentTile.firstChild.id.includes("machine")) {
+                    if (currentTile.firstChild && currentTile.firstChild.id.includes("machine")) {
                         break;
                     }
                     currentTile.appendChild(machinePiece);
@@ -215,7 +266,10 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
                         break;
                     }
                     currentTile = document.querySelector(`#${CSS.escape(integerId.toString())}`);
-                    if (currentTile.firstChild.id.includes("machine")) {
+                    if (currentTile.firstChild && currentTile.firstChild.id.includes("machine")) {
+                        break;
+                    }
+                    if (!currentTile.firstChild && integerId !== machine.tile_position) {
                         break;
                     }
                     currentTile.appendChild(machinePiece);
@@ -593,7 +647,8 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
             borderTopColor: "black",
             borderLeftColor: "black",
             borderRightColor: "black",
-            borderBottomColor: "black"
+            borderBottomColor: "black",
+            opacity: 1
         } 
         if (machine.armor.includes("front")) {
             style.borderTopColor = "blue"
@@ -612,15 +667,68 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
         } if (machine.weak_spots.includes("back")) {
             style.borderBottomColor = "red"
         }
+        if (gameState) {
+            if (!gameState.board.players[0].has_turn && machinesp1.includes(machine)) {
+            style.opacity = 0.55
+        } if (!gameState.board.players[1].has_turn && machinesp2.includes(machine)) {
+            style.opacity = 0.55
+        }
+        }
+          
         return style
+    }
+
+    const showMachine = (e, machine) => {
+        if (gameState) {
+            setShowMachineP1(machine)
+        }
+    }
+    const clearMachine = (e, machine) => {
+        if (gameState) {
+            setShowMachineP1(null)
+        }
+    }
+    const showMachineSecondPlayer = (e, machine) => {
+        if (gameState) {
+            setShowMachineP2(machine)
+        }
+    }
+    const clearMachineSecondPlayer = (e, machine) => {
+        if (gameState) {
+            setShowMachineP2(null)
+        }
     }
 
     return (
         <div className="game">
             <div className="p1-info">
-                <p>Info player 1</p>
-                {/* {showMachineP1 && <div className="show-machine"></div>} */}
-                <p className="show-machine">Left</p>
+                <p></p>
+                {!showMachineP1 && <p></p>}
+                {showMachineP1 && <div className="show-piecesgame">
+                    <div className="show-machinegame">
+                        <div className="name-and-pointsgame">
+                            <h3>{showMachineP1.name.charAt(0).toUpperCase() + showMachineP1.name.slice(1)}</h3>
+                            <p>Points: {showMachineP1.points}</p>
+                        </div>
+                        <div>
+                            <img
+                            className="shown-machinegame"
+                            src={playImages[gameState.board.machines.indexOf(showMachineP1)]}
+                            alt={showMachineP1.name}/>
+                        </div>
+                        <div className="statsgame">
+                            <p className="attackgame">Atk: {showMachineP1.attack}</p>
+                            <p className="healthgame">Hp: {showMachineP1.health}</p>
+                            <p className="attackrangegame">Atk range: {showMachineP1.attack_range}</p>
+                            <p className="moverangegame">Move range: {showMachineP1.movement_range}</p>
+                            <p className="armorgame">Armored spots: {showMachineP1.armor[0]} {showMachineP1.armor[1] &&
+                            showMachineP1.armor[1]} {showMachineP1.armor[2] && showMachineP1.armor[2]}</p>
+                            <p className="weak-spotsgame">Weak spots:<br/>{showMachineP1.weak_spots[0]} {showMachineP1.weak_spots[1] &&
+                            showMachineP1.weak_spots[1]} {showMachineP1.weak_spots[2] && showMachineP1.weak_spots[2]}</p>
+                            <p className="abilitygame">Ability: {showMachineP1.ability}</p>
+                        </div>
+                    </div>
+                </div>}
                 <div className="p1-machinepieces">
                 {machinesp1.map((machine, index) => (
                         <div
@@ -630,7 +738,8 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
                         onFocus={(e) => showMovementPreview(e, machine)}
                         onBlur={(e) => clearMovementPreview(e, machine)}
                         className="player1machine machine-piece"
-                        // onClick={(e) => showMovementPreview(e, machine)}
+                        onMouseEnter={(e) => showMachine(e, machine)}
+                        onMouseLeave={(e) => clearMachine(e, machine)}
                         tabIndex={-1}
                         onKeyDown={(e) => navigateBoard(e, machine)}
                         draggable={true}
@@ -666,9 +775,33 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
                 >End turn</button>}
             </div>
             <div className="p2-info">
-                <p>Info player 2</p>
-                {/* {showMachineP2 && <div className="show-machine"></div>} */}
-                <p className="show-machine">Right</p>
+                <p></p>
+                {!showMachineP2 && <p></p>}
+                {showMachineP2 && <div className="show-piecesgame">
+                    <div className="show-machinegame">
+                        <div className="name-and-pointsgame">
+                            <h3>{showMachineP2.name.charAt(0).toUpperCase() + showMachineP2.name.slice(1)}</h3>
+                            <p>Points: {showMachineP2.points}</p>
+                        </div>
+                        <div>
+                            <img
+                            className="shown-machinegame"
+                            src={playImages[gameState.board.machines.indexOf(showMachineP2)]}
+                            alt={showMachineP2.name}/>
+                        </div>
+                        <div className="statsgame">
+                            <p className="attackgame">Atk: {showMachineP2.attack}</p>
+                            <p className="healthgame">Hp: {showMachineP2.health}</p>
+                            <p className="attackrangegame">Atk range: {showMachineP2.attack_range}</p>
+                            <p className="moverangegame">Move range: {showMachineP2.movement_range}</p>
+                            <p className="armorgame">Armored spots: {showMachineP2.armor[0]} {showMachineP2.armor[1] &&
+                            showMachineP2.armor[1]} {showMachineP2.armor[2] && showMachineP2.armor[2]}</p>
+                            <p className="weak-spotsgame">Weak spots:<br/>{showMachineP2.weak_spots[0]} {showMachineP2.weak_spots[1] &&
+                            showMachineP2.weak_spots[1]} {showMachineP2.weak_spots[2] && showMachineP2.weak_spots[2]}</p>
+                            <p className="abilitygame">Ability: {showMachineP2.ability}</p>
+                        </div>
+                    </div>
+                </div>}
                 <div className="p2-machinepieces">
                 {machinesp2.map((machine, index) => (
                     <div
@@ -678,6 +811,8 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
                     onFocus={(e) => showMovementPreview(e, machine)}
                     onBlur={(e) => clearMovementPreview(e, machine)}
                     className="player2machine machine-piece"
+                    onMouseEnter={(e) => showMachineSecondPlayer(e, machine)}
+                    onMouseLeave={(e) => clearMachineSecondPlayer(e, machine)}
                     tabIndex={-1}
                     onKeyDown={(e) => navigateBoard(e, machine)}
                     draggable={true}

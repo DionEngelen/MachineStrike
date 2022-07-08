@@ -13,9 +13,6 @@ test-job:
     stage: test
     script:
         - pip3 install coverage
-        - pwd 
         - cd domain/src
-        - pwd
-        - ls
         - python -m coverage run test_Board.py
         - python -m coverage report
