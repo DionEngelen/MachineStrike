@@ -12,5 +12,6 @@ stages:
 test-job:
     stage: test
     script:
+        - cd domain/src
         - python -m coverage run test_Board.py
         - python -m coverage report
