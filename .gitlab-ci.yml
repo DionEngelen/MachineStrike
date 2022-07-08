@@ -1,3 +1,5 @@
+image: python:3.11.0b3-bullseye
+
 stages:
     # - build
     - test
