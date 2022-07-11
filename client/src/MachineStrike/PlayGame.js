@@ -292,7 +292,7 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
     const rotatePiece = (machinePiece, machine) => {
         if (!machine.rotation) {
             if (machine.facing === "front") {
-                machine.rotation = 0
+                machine.rotation = 360
             } else if (machine.facing === "right") {
                 machine.rotation = 90
             } else if (machine.facing === "back") {
@@ -301,14 +301,14 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
                 machine.rotation = 270
             }
         }
-        if (machine.rotation === 0) {
+        if (machine.rotation === 360) {
             machine.rotation = 90
         } else if (machine.rotation === 90) {
             machine.rotation = 180
         } else if (machine.rotation === 180) {
             machine.rotation = 270
         } else if (machine.rotation === 270) {
-            machine.rotation = 0
+            machine.rotation = 360
         }
         machinePiece.style.transform = `rotate(${machine.rotation}deg)`;
     }

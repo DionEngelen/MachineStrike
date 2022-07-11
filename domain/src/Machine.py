@@ -3,6 +3,9 @@ from Tile import Tile
 #from Melee import Melee
 
 class Machine():
+    facings = ["front", "right", "back", "left"]
+    tile_interval = [-8, 1, 8, -1]
+
     def __init__(self, name, points, type, health, attack, attack_range,
     movement_range, armor, weak_spots, ability, tile_position, team, facing = "front",
     active = True, moved = False, attacked = False, sprinted = False, overcharged = False):
@@ -25,15 +28,7 @@ class Machine():
         self.__sprinted = sprinted
         self.__overcharged = overcharged
         self.__tile_position = tile_position
-        self.__team = team
-
-    # def MachineFactory(self, name, points, type, health, attack, attack_range,
-    # movement_range, armor, weak_spots, ability, tile_position, team, facing = "front",
-    # active = True, moved = False, attacked = False, sprinted = False, overcharged = False):
-    #     if type == "Melee":
-    #         return Melee(self, name, points, type, health, attack, attack_range,
-    #         movement_range, armor, weak_spots, ability, tile_position, team, facing = "front",
-    #         active = True, moved = False, attacked = False, sprinted = False, overcharged = False) 
+        self.__team = team 
 
     def get_name(self):
         return self.__name
@@ -222,3 +217,60 @@ class Machine():
             if self.get_health() > 1 and (self.get_attacked() or self.get_moved() or self.get_sprinted()):
                 self.set_overcharged(True)
                 self.set_health(self.get_health() - 2)
+
+    def check_armor_and_weak_spots(self, other_machine):
+        facings = ["front", "right", "back", "left"]
+        enemy_facing_index = facings.index(other_machine.get_facing())
+        facing_based_armor = []
+        for armor in other_machine.get_armor():
+            facing_based_armor.append(facings[(facings.index(armor) + enemy_facing_index) % 4])
+        if facings[((facings.index(self.get_facing()) + 2) % 4)] in facing_based_armor:
+            return -1
+
+        facing_based_weak_spots = []
+        for weak_spots in other_machine.get_weak_spots():
+            facing_based_weak_spots.append(facings[(facings.index(weak_spots) + enemy_facing_index) % 4])
+        if facings[((facings.index(self.get_facing()) + 2) % 4)] in facing_based_weak_spots:
+            return 1
+        return 0
+
+    # def check_within_attack_range(self, other_machine):
+    #     current_tile_interval = Machine.tile_interval
+    #     current_facing = self.get_facing()
+    #     current_facing_index = Machine.get_facing_index(current_facing)
+    #     self.check_every_attack_range(1, current_facing, other_machine)
+    #     for attack_tile in range(1, self.get_attack_range() + 1):
+    #         checked_tile = self.get_tile_position() + current_tile_interval[current_facing_index] * attack_tile
+    #         if other_machine.get_tile_position() == checked_tile:
+    #             return True
+    #     return False
+
+    def check_within_attack_range(self, other_machine):
+        current_facing = self.get_facing()
+        match = self.check_every_attack_range(1, current_facing, other_machine)
+        return match
+
+    def check_every_attack_range(self, attack_range, facing, enemy):
+        facing_index = Machine.get_facing_index(facing)
+        checked_tile = self.check_tile(attack_range, facing_index, enemy)
+        if attack_range + 1 < self.get_attack_range() and checked_tile >= 0:
+            return checked_tile
+        self.check_every_attack_range(attack_range + 1, facing, enemy)
+        
+
+    def get_facing_index(facing):
+        facings = Machine.facings
+        return facings.index(facing)
+
+    def check_tile(self, attack_range, facing_index, enemy):
+        tile_interval = Machine.tile_interval
+        checked_tile = self.get_tile_position() + tile_interval[facing_index] * attack_range
+        match = self.check_attack_match(checked_tile, enemy)
+        if match:
+            return checked_tile
+        return -1
+
+    def check_attack_match(self, tile, other_machine):
+        if tile == other_machine.get_tile_position():
+            return True
+        return False
