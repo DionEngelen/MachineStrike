@@ -91,7 +91,7 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
     async function tryPlayGame(tileIndex, machine) {
         let correctMachine
         let newFacing = machine.facing
-        if (machine.rotation === 0) {
+        if (machine.rotation === 360) {
             newFacing = "front"
         } else if (machine.rotation === 90){
             newFacing = "right"
@@ -211,14 +211,14 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
             switch(e.key) {
                 case "ArrowUp":
                     integerId -= 8;
-                    if ((!currentTile.firstChild && integerId !== machine.tile_position) || integerId < 0) {
-                        break;
-                    }
                     if (gameState.board.tiles[integerId].landscape === "chasm" && machine.type !== "Swoop") {
                         break;
                     }
                     currentTile = document.querySelector(`#${CSS.escape(integerId.toString())}`);
                     if (currentTile.firstChild && currentTile.firstChild.id.includes("machine")) {
+                        break;
+                    }
+                    if ((!currentTile.firstChild && integerId !== machine.tile_position) || integerId < 0) {
                         break;
                     }
                     currentTile.appendChild(machinePiece);
@@ -244,14 +244,15 @@ export function PlayGame({player1, player2, board, machinesp1, machinesp2, setMa
                     break;
                 case "ArrowDown":
                     integerId += 8
-                    if ((!currentTile.firstChild && integerId !== machine.tile_position) || integerId > 63) {
-                        break;
-                    }
+                    
                     if (gameState.board.tiles[integerId].landscape === "chasm" && machine.type !== "Swoop") {
                         break;
                     }
                     currentTile = document.querySelector(`#${CSS.escape(integerId.toString())}`);
                     if (currentTile.firstChild && currentTile.firstChild.id.includes("machine")) {
+                        break;
+                    }
+                    if ((!currentTile.firstChild && integerId !== machine.tile_position) || integerId > 63) {
                         break;
                     }
                     currentTile.appendChild(machinePiece);

@@ -23,7 +23,7 @@ class Board():
     def perform_move(self, machine, facing, tile_destination):
         if self.get_players()[0].get_has_turn():
             if not self.get_players()[0].get_two_machines_were_played()\
-            or (machine.get_moved() or machine.get_attacked or machine.get_sprinted()):
+            or (machine.get_moved() or machine.get_attacked() or machine.get_sprinted()):
                 if machine in self.get_players()[0].get_machines():
                     if facing != machine.get_facing():
                         machine.turn(facing)
@@ -49,7 +49,7 @@ class Board():
                                         self.get_players()[0].check_end_turn()
         elif self.get_players()[1].get_has_turn():
             if not self.get_players()[1].get_two_machines_were_played()\
-            or (machine.get_moved() or machine.get_attacked or machine.get_sprinted()):
+            or (machine.get_moved() or machine.get_attacked() or machine.get_sprinted()):
                 if machine in self.get_players()[1].get_machines():
                     if facing != machine.get_facing():
                         machine.turn(facing)
@@ -75,9 +75,16 @@ class Board():
                                         self.get_players()[1].check_end_turn()
 
     def end_turn(self):
-        if self.get_players()[0].get_has_turn():
-            self.get_players()[0].switch_turn(self.get_players()[1])
-            self.get_players()[0].set_two_machines_were_played(False)
-        elif self.get_players()[1].get_has_turn():
-            self.get_players()[1].switch_turn(self.get_players()[0])
-            self.get_players()[1].set_two_machines_were_played(False)
+        players = self.get_players()
+        if players[0].get_has_turn():
+            self.reset_player1_actions(players[0], players[1])
+            return
+        self.reset_player2_actions(players[1], players[0])
+            
+    def reset_player1_actions(self, player_1, player_2):
+        player_1.switch_turn(player_2)
+        player_1.set_two_machines_were_played(False)
+        
+    def reset_player2_actions(self, player_2, player_1):
+        player_2.switch_turn(player_1)
+        player_2.set_two_machines_were_played(False)

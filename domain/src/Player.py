@@ -39,18 +39,25 @@ class Player():
     def check_end_turn(self):
         machines_played = 0
         for machine in self.get_machines():
-            if machine.get_moved() or machine.get_attacked() or machine.get_sprinted():
-                machines_played += 1
+            machines_played += self.check_if_played(machine)
         if machines_played >= 2:
             self.set_two_machines_were_played(True)
+            
+    def check_if_played(self, machine):
+        if machine.get_moved() or machine.get_attacked() or machine.get_sprinted():
+            return 1
+        return 0
 
     def switch_turn(self, other_player):
         if self.get_has_turn() and self.get_two_machines_were_played():
             self.set_has_turn(False)
             other_player.set_has_turn(True)
             self.set_two_machines_were_played(False)
-            for machine in self.get_machines():
-                machine.set_moved(False)
-                machine.set_attacked(False)
-                machine.set_sprinted(False)
-                machine.set_overcharged(False)
+            self.reset_actions_performed()
+                
+    def reset_actions_performed(self):
+        for machine in self.get_machines():
+            machine.set_moved(False)
+            machine.set_attacked(False)
+            machine.set_sprinted(False)
+            machine.set_overcharged(False)

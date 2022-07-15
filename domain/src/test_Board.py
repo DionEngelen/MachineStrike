@@ -21,6 +21,8 @@ class TestBoard(unittest.TestCase):
         machines.append(sunwing)
 
         self.test_machine = Machine("longleg2", 2, "Gunner", 6, 1, 2, 4, ["front"], ["back"], "empower", 12, "player1")
+        self.test_enemy = Machine("bristleback2", 2, "Gunner", 4, 2, 2, 3, ["front"], ["back"], "spray", 15, "player2")
+        self.test_machine_2 = Machine("longleg2", 2, "Gunner", 6, 1, 2, 4, ["front"], ["back"], "empower", 23, "player1")
 
         players = []
         player1 = Player("Dion", True, [grazer, clawstrider, longleg])
@@ -176,6 +178,18 @@ class TestBoard(unittest.TestCase):
     def test_check_non_puller_from_marsh_to_other(self):
         self.board.get_tiles()[0].set_landscape("marsh", -1)
         self.board.perform_move(self.board.get_machines()[0], "front", 8)
+
+    def test_attack_functions(self):
+        self.test_machine.check_armor(self.test_enemy)
+        self.test_machine.check_weak_spots(self.test_enemy)
+        self.test_enemy.turn("back")
+        self.test_machine.check_armor(self.test_enemy)
+        self.test_machine.check_weak_spots(self.test_enemy)
+        self.test_machine.check_within_attack_range(self.test_enemy)
+        self.test_machine.check_armor_break(self.test_enemy)
+        self.test_machine.armor_break(self.test_enemy)
+        self.test_machine.push_back(self.test_enemy)
+        self.test_machine_2.check_within_attack_range(self.test_enemy)
 
 if __name__ == "__main__":
     unittest.main()
