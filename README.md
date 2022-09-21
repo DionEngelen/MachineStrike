@@ -2,12 +2,6 @@
 
 This is my individual project about a boardgame called Machine Strike. It contains a React front-end, and a Python back-end.
 
-## Getting started
-
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
-
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
 ## Add your files
 
 - [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
@@ -44,18 +38,13 @@ Use the built-in continuous integration in GitLab.
 
 ***
 
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!).  Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
 ## Name
 My own version of Machine Strike.
 
 ## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+Machine Strike is an in-game side activity you can play in Horizon Forbidden West. More specifically, it is a turn-based 2-player board game. This repository contains the code trying to re-enact the original boardgame as it is seen in the actual game itself. In short, both players choose a set of board pieces with a maximum value of 10 points in total. Every piece is worth a particular amount of points, depending on the overall strength of the piece. For example, you can have five 2-points pieces or one 6-points piece together with a 4-points piece. When a piece is defeated, the opposing player acquires victorypoints, which are the points that piece is worth to begin with. The goal is to eliminate all strike pieces of your opponent or defeat enough of them to acquire at least 7 victorypoints. Every piece is a certain type and contains health, an attack value, an attack range, a movement range, armored spots, weak spots, and optionally an ability
+
+My implementation is not finished yet. You can select players, choose a board, pick pieces and eventually start the game. While playing you can move the pieces, see beforehand their maximum movement range, and overload them (taking another turn once per piece per turn in exchange for some health). Afterwards, the active player will switch turns enabling the opposing player to the same. The pieces not belonging to the active player are blurred to indicate it s not that player's turn.
 
 ## Badges
 On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
@@ -69,14 +58,8 @@ Within a particular ecosystem, there may be a common way of installing things, s
 ## Usage
 Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
 ## Roadmap
 If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
 
 For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
 
